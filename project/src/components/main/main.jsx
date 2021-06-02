@@ -105,7 +105,7 @@ function Main(props) {
           </ul>
 
           <div className="catalog__films-list">
-            {new Array(20).fill('')
+            {new Array(19).fill('')
               .map((_) => <SmallFilmCard key={new Date().getTime + Math.floor(Math.random() * 1000)}/>)}
           </div>
 
