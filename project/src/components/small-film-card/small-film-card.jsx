@@ -1,10 +1,12 @@
 import React from 'react';
 import filmProp from '../film/film.prop';
 import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
+import {AppRoute} from '../../consts';
 
 
 function SmallFilmCard({film, hoverHandler}) {
-  const {title, cover} = film;
+  const {id, title, cover} = film;
 
 
   return (
@@ -17,7 +19,7 @@ function SmallFilmCard({film, hoverHandler}) {
         <img src={cover} alt="Fantastic Beasts: The Crimes of Grindelwald" width="280" height="175" />
       </div>
       <h3 className="small-film-card__title">
-        <a className="small-film-card__link" href="film-page.html">{title}</a>
+        <Link className="small-film-card__link" to={`${AppRoute.FILMS}/${id}`}>{title}</Link>
       </h3>
     </article>
   );

@@ -42,19 +42,25 @@ function App(props) {
         </Route>
         <Route path={`${AppRoute.FILMS}/:id`} exact
           render={
-            () => <Film film={films[0]}></Film>
+            ({match}) => (
+              <Film
+                film={films[match.params.id]}
+                similarFilms={films.slice(0, 4)}
+              >
+              </Film>
+            )
           }
         >
         </Route>
         <Route path={`${AppRoute.FILMS}/:id${AppRoute.REVIEW}`} exact
           render={
-            () => <AddReview film={films[1]}></AddReview>
+            ({match}) => <AddReview film={films[match.params.id]}></AddReview>
           }
         >
         </Route>
         <Route path={`${AppRoute.PLAYER}/:id`} exact
           render={
-            () => <Player film={films[4]}></Player>
+            ({match}) => <Player film={films[match.params.id]}></Player>
           }
         >
         </Route>
