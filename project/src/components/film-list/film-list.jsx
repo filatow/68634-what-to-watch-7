@@ -4,7 +4,8 @@ import filmProp from '../film/film.prop';
 import SmallFilmCard from '../small-film-card/small-film-card';
 
 function FilmList({films}) {
-  const [activeFilmCard, setactiveFilmCard] = useState({});
+  // const [activeFilmCard, setactiveFilmCard] = useState({});
+  const setactiveFilmCard = useState({})[1];
 
 
   return (

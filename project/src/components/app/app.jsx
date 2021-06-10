@@ -46,8 +46,18 @@ function App(props) {
           }
         >
         </Route>
-        <Route path="/films/:id/review" exact component={AddReview}></Route>
-        <Route path="/player/:id" exact component={Player}></Route>
+        <Route path="/films/:id/review" exact
+          render={
+            () => <AddReview film={films[1]}></AddReview>
+          }
+        >
+        </Route>
+        <Route path="/player/:id" exact
+          render={
+            () => <Player film={films[4]}></Player>
+          }
+        >
+        </Route>
         <Route
           render={
             () => <Page404></Page404>
@@ -62,7 +72,7 @@ function App(props) {
 App.propTypes = {
   films: PropTypes.arrayOf(filmProp).isRequired,
   title: PropTypes.string.isRequired,
-  genre: PropTypes.string.isRequired.isRequired,
+  genre: PropTypes.string.isRequired,
   year: PropTypes.number.isRequired,
 };
 

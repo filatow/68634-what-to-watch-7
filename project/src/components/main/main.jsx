@@ -133,7 +133,7 @@ function Main(props) {
 Main.propTypes = {
   films: PropTypes.arrayOf(filmProp).isRequired,
   title: PropTypes.string.isRequired,
-  genre: PropTypes.string.isRequired.isRequired,
+  genre: PropTypes.string.isRequired,
   year: PropTypes.number.isRequired,
 };
 export default Main;
