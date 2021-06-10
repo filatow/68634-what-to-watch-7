@@ -8,7 +8,7 @@ ReactDOM.render(
     <App
       films={films}
       title="The Grand Budapest Hotel"
-      genre={['Drama']}
+      genre={'Drama'}
       year={2014}
     />
   </React.StrictMode>,

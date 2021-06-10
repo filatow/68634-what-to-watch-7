@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import filmProp from '../film/film.prop';
 import SmallFilmCard from '../small-film-card/small-film-card';
 
-function FilmCatalog({films}) {
+function FilmList({films}) {
   const [activeFilmCard, setactiveFilmCard] = useState({});
 
 
@@ -20,8 +20,8 @@ function FilmCatalog({films}) {
   );
 }
 
-FilmCatalog.propTypes = {
+FilmList.propTypes = {
   films: PropTypes.arrayOf(filmProp).isRequired,
 };
 
-export default FilmCatalog;
+export default FilmList;

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import filmProp from '../film/film.prop';
-import FilmCatalog from '../film-catalog/film-catalog';
+import FilmList from '../film-list/film-list';
 
 
 function Main(props) {
@@ -105,7 +105,7 @@ function Main(props) {
             </li>
           </ul>
 
-          <FilmCatalog films={films}></FilmCatalog>
+          <FilmList films={films}></FilmList>
 
           <div className="catalog__more">
             <button className="catalog__button" type="button">Show more</button>
@@ -133,7 +133,7 @@ function Main(props) {
 Main.propTypes = {
   films: PropTypes.arrayOf(filmProp).isRequired,
   title: PropTypes.string.isRequired,
-  genre: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  genre: PropTypes.string.isRequired.isRequired,
   year: PropTypes.number.isRequired,
 };
 export default Main;

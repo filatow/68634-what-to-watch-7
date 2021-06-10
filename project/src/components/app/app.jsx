@@ -34,7 +34,12 @@ function App(props) {
         >
         </Route>
         <Route path="/login" exact component={SignIn}></Route>
-        <Route path="/mylist" exact component={MyList}></Route>
+        <Route path="/mylist" exact
+          render={
+            () => <MyList films={films.slice(5)}></MyList>
+          }
+        >
+        </Route>
         <Route path="/films/:id" exact
           render={
             () => <Film film={films[0]}></Film>
@@ -57,7 +62,7 @@ function App(props) {
 App.propTypes = {
   films: PropTypes.arrayOf(filmProp).isRequired,
   title: PropTypes.string.isRequired,
-  genre: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  genre: PropTypes.string.isRequired.isRequired,
   year: PropTypes.number.isRequired,
 };
 
