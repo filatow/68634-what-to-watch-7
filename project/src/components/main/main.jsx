@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SmallFilmCard from '../small-film-card/small-film-card';
 import filmProp from '../film/film.prop';
+import FilmCatalog from '../film-catalog/film-catalog';
 
 
 function Main(props) {
@@ -105,9 +105,7 @@ function Main(props) {
             </li>
           </ul>
 
-          <div className="catalog__films-list">
-            {films.map((film) => <SmallFilmCard film={film} key={film.id}/>)}
-          </div>
+          <FilmCatalog films={films}></FilmCatalog>
 
           <div className="catalog__more">
             <button className="catalog__button" type="button">Show more</button>
