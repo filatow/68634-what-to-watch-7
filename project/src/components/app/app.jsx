@@ -9,7 +9,7 @@ import AddReview from '../add-review/add-review';
 import Player from '../player/player';
 import Page404 from '../page-404/page-404';
 import filmProp from '../film/film.prop';
-
+import {AppRoute} from '../../consts';
 
 function App(props) {
   const {films, title, genre, year} = props;
@@ -33,26 +33,26 @@ function App(props) {
           }
         >
         </Route>
-        <Route path="/login" exact component={SignIn}></Route>
-        <Route path="/mylist" exact
+        <Route path={AppRoute.LOGIN} exact component={SignIn}></Route>
+        <Route path={AppRoute.MYLIST} exact
           render={
             () => <MyList films={films.slice(5)}></MyList>
           }
         >
         </Route>
-        <Route path="/films/:id" exact
+        <Route path={`${AppRoute.FILMS}/:id`} exact
           render={
             () => <Film film={films[0]}></Film>
           }
         >
         </Route>
-        <Route path="/films/:id/review" exact
+        <Route path={`${AppRoute.FILMS}/:id${AppRoute.REVIEW}`} exact
           render={
             () => <AddReview film={films[1]}></AddReview>
           }
         >
         </Route>
-        <Route path="/player/:id" exact
+        <Route path={`${AppRoute.PLAYER}/:id`} exact
           render={
             () => <Player film={films[4]}></Player>
           }
