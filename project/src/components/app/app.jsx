@@ -26,6 +26,7 @@ function App(props) {
                 title={title}
                 genre={genre}
                 year={year}
+                films={films}
               >
               </Main>
             )
@@ -36,7 +37,7 @@ function App(props) {
         <Route path="/mylist" exact component={MyList}></Route>
         <Route path="/films/:id" exact
           render={
-            () => <Film info={films[0]}></Film>
+            () => <Film film={films[0]}></Film>
           }
         >
         </Route>

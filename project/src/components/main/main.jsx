@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SmallFilmCard from '../small-film-card/small-film-card';
+import filmProp from '../film/film.prop';
 
 
 function Main(props) {
-  const {title, genre, year} = props;
+  const {title, genre, year, films} = props;
 
   return (
     <React.Fragment>
@@ -105,8 +106,7 @@ function Main(props) {
           </ul>
 
           <div className="catalog__films-list">
-            {new Array(20).fill('')
-              .map((_) => <SmallFilmCard key={new Date().getTime + Math.floor(Math.random() * 1000)}/>)}
+            {films.map((film) => <SmallFilmCard film={film} key={film.id}/>)}
           </div>
 
           <div className="catalog__more">
@@ -133,6 +133,7 @@ function Main(props) {
 }
 
 Main.propTypes = {
+  films: PropTypes.arrayOf(filmProp).isRequired,
   title: PropTypes.string.isRequired,
   genre: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   year: PropTypes.number.isRequired,
