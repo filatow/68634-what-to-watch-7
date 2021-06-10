@@ -8,10 +8,11 @@ import Film from '../film/film';
 import AddReview from '../add-review/add-review';
 import Player from '../player/player';
 import Page404 from '../page-404/page-404';
+import filmProp from '../film/film.prop';
 
 
 function App(props) {
-  const {title, genre, year} = props;
+  const {films, title, genre, year} = props;
 
   return (
     <Router>
@@ -33,7 +34,12 @@ function App(props) {
         </Route>
         <Route path="/login" exact component={SignIn}></Route>
         <Route path="/mylist" exact component={MyList}></Route>
-        <Route path="/films/:id" exact component={Film}></Route>
+        <Route path="/films/:id" exact
+          render={
+            () => <Film info={films[0]}></Film>
+          }
+        >
+        </Route>
         <Route path="/films/:id/review" exact component={AddReview}></Route>
         <Route path="/player/:id" exact component={Player}></Route>
         <Route
@@ -48,6 +54,7 @@ function App(props) {
 }
 
 App.propTypes = {
+  films: PropTypes.arrayOf(filmProp).isRequired,
   title: PropTypes.string.isRequired,
   genre: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   year: PropTypes.number.isRequired,
