@@ -1,7 +1,7 @@
 # Личный проект «Что посмотреть»
 
 * Студент: [Евгений Филатов](https://up.htmlacademy.ru/react/7/user/68634).
-* Наставник: [Александр Быков](https://htmlacademy.ru/profile/id7107).
+* Наставник: [Дмитрий Федин](https://htmlacademy.ru/profile/id1599231).
 
 ---
 
