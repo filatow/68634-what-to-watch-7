@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import filmProp from '../film/film.prop';
 import FilmList from '../film-list/film-list';
+import {Link} from 'react-router-dom';
+import {AppRoute} from '../../consts';
 
 
 function Main(props) {
@@ -19,11 +21,11 @@ function Main(props) {
 
         <header className="page-header film-card__head">
           <div className="logo">
-            <a href="index.html" className="logo__link">
+            <Link to={AppRoute.MAIN} className="logo__link">
               <span className="logo__letter logo__letter--1">W</span>
               <span className="logo__letter logo__letter--2">T</span>
               <span className="logo__letter logo__letter--3">W</span>
-            </a>
+            </Link>
           </div>
 
           <ul className="user-block">
@@ -33,7 +35,7 @@ function Main(props) {
               </div>
             </li>
             <li className="user-block__item">
-              <a href="index.html" className="user-block__link">Sign out</a>
+              <Link to={AppRoute.LOGIN} className="user-block__link">Sign out</Link>
             </li>
           </ul>
         </header>
@@ -115,11 +117,11 @@ function Main(props) {
 
         <footer className="page-footer">
           <div className="logo">
-            <a href="index.html" className="logo__link logo__link--light">
+            <Link to={AppRoute.MAIN} className="logo__link logo__link--light">
               <span className="logo__letter logo__letter--1">W</span>
               <span className="logo__letter logo__letter--2">T</span>
               <span className="logo__letter logo__letter--3">W</span>
-            </a>
+            </Link>
           </div>
 
           <div className="copyright">

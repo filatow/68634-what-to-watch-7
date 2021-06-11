@@ -19,7 +19,7 @@ function SmallFilmCard({film, hoverHandler}) {
         <img src={cover} alt="Fantastic Beasts: The Crimes of Grindelwald" width="280" height="175" />
       </div>
       <h3 className="small-film-card__title">
-        <Link className="small-film-card__link" to={`${AppRoute.FILMS}/${id}`}>{title}</Link>
+        <Link className="small-film-card__link" to={`${AppRoute.FILMS}/${id-1}`}>{title}</Link>
       </h3>
     </article>
   );

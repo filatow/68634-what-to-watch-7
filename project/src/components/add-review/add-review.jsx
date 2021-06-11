@@ -1,8 +1,10 @@
 import React from 'react';
 import filmProp from '../film/film.prop';
+import {Link} from 'react-router-dom';
+import {AppRoute} from '../../consts';
 
 function AddReview({film}) {
-  const {title, backgroundImage, poster} = film;
+  const {title, backgroundImage, poster, id} = film;
 
   return (
     <section className="film-card film-card--full">
@@ -15,17 +17,17 @@ function AddReview({film}) {
 
         <header className="page-header">
           <div className="logo">
-            <a href="main.html" className="logo__link">
+            <Link to={AppRoute.MAIN} className="logo__link">
               <span className="logo__letter logo__letter--1">W</span>
               <span className="logo__letter logo__letter--2">T</span>
               <span className="logo__letter logo__letter--3">W</span>
-            </a>
+            </Link>
           </div>
 
           <nav className="breadcrumbs">
             <ul className="breadcrumbs__list">
               <li className="breadcrumbs__item">
-                <a href="film-page.html" className="breadcrumbs__link">{title}</a>
+                <Link to={`${AppRoute.FILMS}/${id-1}`} className="breadcrumbs__link">{title}</Link>
               </li>
               <li className="breadcrumbs__item">
                 <a href="/" className="breadcrumbs__link">Add review</a>
@@ -40,7 +42,7 @@ function AddReview({film}) {
               </div>
             </li>
             <li className="user-block__item">
-              <a href="/" className="user-block__link">Sign out</a>
+              <Link to={AppRoute.LOGIN} className="user-block__link">Sign out</Link>
             </li>
           </ul>
         </header>

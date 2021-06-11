@@ -2,8 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import filmProp from './film.prop';
 import FilmList from '../film-list/film-list';
+import {Link} from 'react-router-dom';
+import {AppRoute} from '../../consts';
+import Page404 from '../page-404/page-404';
 
 function Film({film, similarFilms}) {
+  if (!film) {
+    return <Page404></Page404>;
+  }
+
   const {
     title,
     backgroundImage,
@@ -15,6 +22,7 @@ function Film({film, similarFilms}) {
     starring,
     cover,
     genre,
+    id,
   } = film;
 
   const determineGrage = function(numericRating) {
@@ -46,11 +54,11 @@ function Film({film, similarFilms}) {
 
           <header className="page-header film-card__head">
             <div className="logo">
-              <a href="main.html" className="logo__link">
+              <Link to={AppRoute.MAIN} className="logo__link">
                 <span className="logo__letter logo__letter--1">W</span>
                 <span className="logo__letter logo__letter--2">T</span>
                 <span className="logo__letter logo__letter--3">W</span>
-              </a>
+              </Link>
             </div>
 
             <ul className="user-block">
@@ -60,7 +68,7 @@ function Film({film, similarFilms}) {
                 </div>
               </li>
               <li className="user-block__item">
-                <a href="/" className="user-block__link">Sign out</a>
+                <Link to={AppRoute.LOGIN} className="user-block__link">Sign out</Link>
               </li>
             </ul>
           </header>
@@ -86,7 +94,7 @@ function Film({film, similarFilms}) {
                   </svg>
                   <span>My list</span>
                 </button>
-                <a href="add-review.html" className="btn film-card__button">Add review</a>
+                <Link to={`${AppRoute.FILMS}/${id-1}${AppRoute.REVIEW}`} className="btn film-card__button">Add review</Link>
               </div>
             </div>
           </div>
@@ -145,11 +153,11 @@ function Film({film, similarFilms}) {
 
         <footer className="page-footer">
           <div className="logo">
-            <a href="main.html" className="logo__link logo__link--light">
+            <Link to={AppRoute.MAIN} className="logo__link logo__link--light">
               <span className="logo__letter logo__letter--1">W</span>
               <span className="logo__letter logo__letter--2">T</span>
               <span className="logo__letter logo__letter--3">W</span>
-            </a>
+            </Link>
           </div>
 
           <div className="copyright">
