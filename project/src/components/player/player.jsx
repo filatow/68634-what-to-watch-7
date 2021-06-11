@@ -1,7 +1,9 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import filmProp from '../film/film.prop';
 
-function Player(props) {
+function Player({film}) {
+  const {title} = film;
+
   return (
     <div className="player">
       <video src="#" className="player__video" poster="img/player-poster.jpg"></video>
@@ -24,7 +26,7 @@ function Player(props) {
             </svg>
             <span>Play</span>
           </button>
-          <div className="player__name">Transpotting</div>
+          <div className="player__name">{title}</div>
 
           <button type="button" className="player__full-screen">
             <svg viewBox="0 0 27 27" width="27" height="27">
@@ -39,7 +41,7 @@ function Player(props) {
 }
 
 Player.propTypes = {
-
+  film: filmProp,
 };
 
 export default Player;

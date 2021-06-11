@@ -8,10 +8,11 @@ import Film from '../film/film';
 import AddReview from '../add-review/add-review';
 import Player from '../player/player';
 import Page404 from '../page-404/page-404';
-
+import filmProp from '../film/film.prop';
+import {AppRoute} from '../../consts';
 
 function App(props) {
-  const {title, genre, year} = props;
+  const {films} = props;
 
   return (
     <Router>
@@ -22,20 +23,45 @@ function App(props) {
           render={
             () => (
               <Main
-                title={title}
-                genre={genre}
-                year={year}
+                promotedFilm={films[7]}
+                films={films}
               >
               </Main>
             )
           }
         >
         </Route>
-        <Route path="/login" exact component={SignIn}></Route>
-        <Route path="/mylist" exact component={MyList}></Route>
-        <Route path="/films/:id" exact component={Film}></Route>
-        <Route path="/films/:id/review" exact component={AddReview}></Route>
-        <Route path="/player/:id" exact component={Player}></Route>
+        <Route path={AppRoute.LOGIN} exact component={SignIn}></Route>
+        <Route path={AppRoute.MYLIST} exact
+          render={
+            () => <MyList films={films.slice(5)}></MyList>
+          }
+        >
+        </Route>
+        <Route path={`${AppRoute.FILMS}/:id`} exact
+          render={
+            ({match}) => (
+              <Film
+                film={films[match.params.id]}
+                similarFilms={films.slice(0, 4)}
+              >
+              </Film>
+            )
+          }
+        >
+        </Route>
+        <Route path={`${AppRoute.FILMS}/:id${AppRoute.REVIEW}`} exact
+          render={
+            ({match}) => <AddReview film={films[match.params.id]}></AddReview>
+          }
+        >
+        </Route>
+        <Route path={`${AppRoute.PLAYER}/:id`} exact
+          render={
+            ({match}) => <Player film={films[match.params.id]}></Player>
+          }
+        >
+        </Route>
         <Route
           render={
             () => <Page404></Page404>
@@ -48,9 +74,7 @@ function App(props) {
 }
 
 App.propTypes = {
-  title: PropTypes.string.isRequired,
-  genre: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
-  year: PropTypes.number.isRequired,
+  films: PropTypes.arrayOf(filmProp).isRequired,
 };
 
 export default App;
