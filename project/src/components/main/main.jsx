@@ -5,13 +5,14 @@ import FilmList from '../film-list/film-list';
 
 
 function Main(props) {
-  const {title, genre, year, films} = props;
+  const {promotedFilm, films} = props;
+  const {title, genre, release, backgroundImage, poster} = promotedFilm;
 
   return (
     <React.Fragment>
       <section className="film-card">
         <div className="film-card__bg">
-          <img src="img/bg-the-grand-budapest-hotel.jpg" alt="The Grand Budapest Hotel" />
+          <img src={backgroundImage} alt="The Grand Budapest Hotel" />
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
@@ -40,14 +41,14 @@ function Main(props) {
         <div className="film-card__wrap">
           <div className="film-card__info">
             <div className="film-card__poster">
-              <img src="img/the-grand-budapest-hotel-poster.jpg" alt="The Grand Budapest Hotel poster" width="218" height="327" />
+              <img src={poster} alt={title} width="218" height="327" />
             </div>
 
             <div className="film-card__desc">
               <h2 className="film-card__title">{title}</h2>
               <p className="film-card__meta">
                 <span className="film-card__genre">{genre}</span>
-                <span className="film-card__year">{year}</span>
+                <span className="film-card__year">{release}</span>
               </p>
 
               <div className="film-card__buttons">
@@ -131,9 +132,7 @@ function Main(props) {
 }
 
 Main.propTypes = {
+  promotedFilm: filmProp,
   films: PropTypes.arrayOf(filmProp).isRequired,
-  title: PropTypes.string.isRequired,
-  genre: PropTypes.string.isRequired,
-  year: PropTypes.number.isRequired,
 };
 export default Main;

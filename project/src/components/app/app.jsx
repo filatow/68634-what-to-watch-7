@@ -12,7 +12,7 @@ import filmProp from '../film/film.prop';
 import {AppRoute} from '../../consts';
 
 function App(props) {
-  const {films, title, genre, year} = props;
+  const {films} = props;
 
   return (
     <Router>
@@ -23,9 +23,7 @@ function App(props) {
           render={
             () => (
               <Main
-                title={title}
-                genre={genre}
-                year={year}
+                promotedFilm={films[7]}
                 films={films}
               >
               </Main>
@@ -77,9 +75,6 @@ function App(props) {
 
 App.propTypes = {
   films: PropTypes.arrayOf(filmProp).isRequired,
-  title: PropTypes.string.isRequired,
-  genre: PropTypes.string.isRequired,
-  year: PropTypes.number.isRequired,
 };
 
 export default App;
