@@ -4,9 +4,7 @@ import filmProp from '../film/film.prop';
 import SmallFilmCard from '../small-film-card/small-film-card';
 
 function FilmList({films}) {
-  // const [activeFilmCard, setactiveFilmCard] = useState({});
-  const setactiveFilmCard = useState({})[1];
-
+  const [activeFilmCard, setActiveFilmCard] = useState({});
 
   return (
     <div className="catalog__films-list">
@@ -14,7 +12,8 @@ function FilmList({films}) {
         <SmallFilmCard
           film={film}
           key={film.id}
-          hoverHandler={setactiveFilmCard}
+          hoverHandler={setActiveFilmCard}
+          isActive={activeFilmCard?.id === film.id}
         />
       ))}
     </div>
