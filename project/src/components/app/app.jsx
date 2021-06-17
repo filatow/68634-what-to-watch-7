@@ -25,16 +25,15 @@ function App(props) {
               <Main
                 promotedFilm={films[7]}
                 films={films}
-              >
-              </Main>
+              />
             )
           }
         >
         </Route>
-        <Route path={AppRoute.LOGIN} exact component={SignIn}></Route>
+        <Route path={AppRoute.LOGIN} exact component={SignIn} />
         <Route path={AppRoute.MYLIST} exact
           render={
-            () => <MyList films={films.slice(5)}></MyList>
+            () => <MyList films={films.slice(5)} />
           }
         >
         </Route>
@@ -42,29 +41,32 @@ function App(props) {
           render={
             ({match}) => (
               <Film
-                film={films[match.params.id]}
+                film={films.find((film) => String(film.id) === String(match.params.id))}
                 similarFilms={films.slice(0, 4)}
-              >
-              </Film>
+              />
             )
           }
         >
         </Route>
         <Route path={`${AppRoute.FILMS}/:id${AppRoute.REVIEW}`} exact
           render={
-            ({match}) => <AddReview film={films[match.params.id]}></AddReview>
+            ({match}) => (
+              <AddReview film={films.find((film) => String(film.id) === String(match.params.id))} />
+            )
           }
         >
         </Route>
         <Route path={`${AppRoute.PLAYER}/:id`} exact
           render={
-            ({match}) => <Player film={films[match.params.id]}></Player>
+            ({match}) => (
+              <Player film={films.find((film) => String(film.id) === String(match.params.id))} />
+            )
           }
         >
         </Route>
         <Route
           render={
-            () => <Page404></Page404>
+            () => <Page404 />
           }
         >
         </Route>

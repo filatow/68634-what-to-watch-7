@@ -6,6 +6,19 @@ import {Link} from 'react-router-dom';
 import {AppRoute} from '../../consts';
 import Page404 from '../page-404/page-404';
 
+const determineGrage = function(numericRating) {
+  if (numericRating === 10) {
+    return 'Awesome';
+  } else if (numericRating >= 8) {
+    return 'Very good';
+  } else if (numericRating >= 5) {
+    return 'Good';
+  } else if (numericRating >= 3) {
+    return 'Normal';
+  } else {
+    return 'Bad';
+  }
+};
 function Film({film, similarFilms}) {
   if (!film) {
     return <Page404></Page404>;
@@ -24,20 +37,6 @@ function Film({film, similarFilms}) {
     genre,
     id,
   } = film;
-
-  const determineGrage = function(numericRating) {
-    if (numericRating === 10) {
-      return 'Awesome';
-    } else if (numericRating >= 8) {
-      return 'Very good';
-    } else if (numericRating >= 5) {
-      return 'Good';
-    } else if (numericRating >= 3) {
-      return 'Normal';
-    } else {
-      return 'Bad';
-    }
-  };
 
   const filmStarring = starring.join(', ');
   const voteGrade = determineGrage(rating);
@@ -94,7 +93,7 @@ function Film({film, similarFilms}) {
                   </svg>
                   <span>My list</span>
                 </button>
-                <Link to={`${AppRoute.FILMS}/${id-1}${AppRoute.REVIEW}`} className="btn film-card__button">Add review</Link>
+                <Link to={`${AppRoute.FILMS}/${id}${AppRoute.REVIEW}`} className="btn film-card__button">Add review</Link>
               </div>
             </div>
           </div>
