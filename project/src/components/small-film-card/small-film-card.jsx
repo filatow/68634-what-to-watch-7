@@ -5,23 +5,19 @@ import {Link} from 'react-router-dom';
 import {AppRoute} from '../../consts';
 import VideoPlayer from '../video-player/video-player';
 
-function SmallFilmCard({film, hoverHandler, isActive}) {
+function SmallFilmCard({film,onHover, isActive}) {
   const {cover, previewVideo, id, title} = film;
   const VIDEO_PLAYER_WIDTH = '280';
   const VIDEO_PLAYER_HEIGHT = '175';
-  let timerID;
 
   return (
     <article
       className="small-film-card catalog__films-card"
       onMouseEnter={() => {
-        timerID = setTimeout(() => {
-          hoverHandler(film);
-        }, 1000);
+        onHover(film);
       }}
       onMouseLeave={() => {
-        clearTimeout(timerID);
-        hoverHandler({});
+        onHover({});
       }}
     >
 
@@ -33,8 +29,7 @@ function SmallFilmCard({film, hoverHandler, isActive}) {
           height={VIDEO_PLAYER_HEIGHT}
           isActive={isActive}
           muted
-        >
-        </VideoPlayer>
+        />
       </div>
 
       <h3 className="small-film-card__title">
@@ -46,7 +41,7 @@ function SmallFilmCard({film, hoverHandler, isActive}) {
 
 SmallFilmCard.propTypes = {
   film: filmProp,
-  hoverHandler: PropTypes.func.isRequired,
+  onHover: PropTypes.func.isRequired,
   isActive: PropTypes.bool.isRequired,
 };
 export default SmallFilmCard;

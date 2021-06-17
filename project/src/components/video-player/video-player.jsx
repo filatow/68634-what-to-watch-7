@@ -4,17 +4,22 @@ import PropTypes from 'prop-types';
 function VideoPlayer({cover, src, width, height, isActive, muted}) {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const timerId = useRef(null);
 
   useEffect(() => {
     if (isPlaying !== isActive) {
       setIsPlaying(isActive);
       if (isActive) {
-        videoRef.current.play();
+        timerId.current = setTimeout(() => {
+          videoRef.current.play();
+        }, 1000);
+
       } else {
+        clearTimeout(timerId.current);
         videoRef.current.load();
       }
     }
-  }, [isActive]);
+  }, [isActive, isPlaying]);
 
   return (
     <video
@@ -25,9 +30,7 @@ function VideoPlayer({cover, src, width, height, isActive, muted}) {
       height={height}
       muted={muted}
       preload='auto'
-      controls
-    >
-    </video>
+    />
   );
 }
 

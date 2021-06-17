@@ -12,7 +12,7 @@ function FilmList({films}) {
         <SmallFilmCard
           film={film}
           key={film.id}
-          hoverHandler={setActiveFilmCard}
+          onHover={setActiveFilmCard}
           isActive={activeFilmCard?.id === film.id}
         />
       ))}
