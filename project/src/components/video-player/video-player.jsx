@@ -18,6 +18,9 @@ function VideoPlayer({cover, src, width, height, isActive, muted}) {
         clearTimeout(timerId.current);
         videoRef.current.load();
       }
+
+      clearTimeout(timerId.current);
+      return () => {clearTimeout(timerId.current);};
     }
   }, [isActive, isPlaying]);
 
