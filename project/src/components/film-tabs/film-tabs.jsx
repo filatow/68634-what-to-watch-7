@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import filmProp from '../film/film.prop';
 import OverviewTab from './../overview-tab/overview-tab';
 import DetailsTab from './../details-tab/details-tab';
@@ -26,6 +26,10 @@ function FilmTabs({film}) {
       </a>
     </li>
   ));
+
+  useEffect(() => {
+    setActiveTab(TAB_NAMES[0]);
+  }, [film]);
 
   return (
     <>
