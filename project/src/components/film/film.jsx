@@ -2,44 +2,25 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import filmProp from './film.prop';
 import FilmList from '../film-list/film-list';
+import FilmTabs from '../film-tabs/film-tabs';
 import {Link} from 'react-router-dom';
 import {AppRoute} from '../../consts';
 import Page404 from '../page-404/page-404';
 
-const determineGrage = function(numericRating) {
-  if (numericRating === 10) {
-    return 'Awesome';
-  } else if (numericRating >= 8) {
-    return 'Very good';
-  } else if (numericRating >= 5) {
-    return 'Good';
-  } else if (numericRating >= 3) {
-    return 'Normal';
-  } else {
-    return 'Bad';
-  }
-};
 function Film({film, similarFilms}) {
   if (!film) {
-    return <Page404></Page404>;
+    return <Page404 />;
   }
 
   const {
     title,
     backgroundImage,
-    description,
     release,
-    rating,
-    voteCount,
-    director,
-    starring,
     cover,
     genre,
     id,
   } = film;
 
-  const filmStarring = starring.join(', ');
-  const voteGrade = determineGrage(rating);
 
   return (
     <React.Fragment>
@@ -106,35 +87,7 @@ function Film({film, similarFilms}) {
             </div>
 
             <div className="film-card__desc">
-              <nav className="film-nav film-card__nav">
-                <ul className="film-nav__list">
-                  <li className="film-nav__item film-nav__item--active">
-                    <a href="/" className="film-nav__link">Overview</a>
-                  </li>
-                  <li className="film-nav__item">
-                    <a href="/" className="film-nav__link">Details</a>
-                  </li>
-                  <li className="film-nav__item">
-                    <a href="/" className="film-nav__link">Reviews</a>
-                  </li>
-                </ul>
-              </nav>
-
-              <div className="film-rating">
-                <div className="film-rating__score">{rating}</div>
-                <p className="film-rating__meta">
-                  <span className="film-rating__level">{voteGrade}</span>
-                  <span className="film-rating__count">{voteCount} ratings</span>
-                </p>
-              </div>
-
-              <div className="film-card__text">
-                {description}
-
-                <p className="film-card__director"><strong>Director: {director}</strong></p>
-
-                <p className="film-card__starring"><strong>Starring: {filmStarring} and other</strong></p>
-              </div>
+              <FilmTabs film={film} />
             </div>
           </div>
         </div>
