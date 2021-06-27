@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Main from '../main/main';
@@ -8,11 +9,24 @@ import Film from '../film/film';
 import AddReview from '../add-review/add-review';
 import Player from '../player/player';
 import Page404 from '../page-404/page-404';
+import Spinner from '../spinner/spinner';
 import filmProp from '../film/film.prop';
 import {AppRoute} from '../../consts';
+import {isAuthChecking} from '../../utils';
+
 
 function App(props) {
-  const {films} = props;
+  const {
+    authorizationStatus,
+    isDataLoaded,
+    films,
+    promotedFilm,
+  } = props;
+
+  if (isAuthChecking(authorizationStatus) || !isDataLoaded) {
+    return <Spinner />;
+  }
+
 
   return (
     <Router>
@@ -23,7 +37,7 @@ function App(props) {
           render={
             () => (
               <Main
-                promotedFilm={films[7]}
+                promotedFilm={promotedFilm}
                 films={films}
               />
             )
@@ -76,7 +90,21 @@ function App(props) {
 }
 
 App.propTypes = {
+  authorizationStatus: PropTypes.string.isRequired,
+  isDataLoaded: PropTypes.bool.isRequired,
   films: PropTypes.arrayOf(filmProp).isRequired,
+  promotedFilm: PropTypes.oneOfType([
+    filmProp,
+    PropTypes.shape({}),
+  ]).isRequired,
 };
 
-export default App;
+const mapStateToProps = (state) => ({
+  authorizationStatus: state.authorizationStatus,
+  isDataLoaded: state.areFilmsLoaded && state.isPromotedFilmLoaded,
+  films: state.films,
+  promotedFilm: state.promotedFilm,
+});
+
+export {App};
+export default connect(mapStateToProps, null)(App);

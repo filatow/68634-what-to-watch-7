@@ -6,9 +6,11 @@ import {AppRoute} from '../../consts';
 import filmProp from '../film/film.prop';
 import FilmList from '../film-list/film-list';
 import GenreList from '../genre-list/genre-list';
+import UserBlock from '../user-block/user-block';
 
 
-function Main({filteredFilms, promotedFilm}) {
+function Main(props) {
+  const {authorizationStatus, filteredFilms, promotedFilm} = props;
   const {title, genre, release, backgroundImage, poster} = promotedFilm;
 
   return (
@@ -29,16 +31,9 @@ function Main({filteredFilms, promotedFilm}) {
             </Link>
           </div>
 
-          <ul className="user-block">
-            <li className="user-block__item">
-              <div className="user-block__avatar">
-                <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
-              </div>
-            </li>
-            <li className="user-block__item">
-              <Link to={AppRoute.LOGIN} className="user-block__link">Sign out</Link>
-            </li>
-          </ul>
+          <UserBlock
+            authorizationStatus={authorizationStatus}
+          />
         </header>
 
         <div className="film-card__wrap">
@@ -106,10 +101,12 @@ function Main({filteredFilms, promotedFilm}) {
 Main.propTypes = {
   filteredFilms: PropTypes.arrayOf(filmProp).isRequired,
   promotedFilm: filmProp,
+  authorizationStatus: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   filteredFilms: state.filteredFilms,
+  authorizationStatus: state.authorizationStatus,
 });
 
 export {Main};

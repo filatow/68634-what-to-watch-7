@@ -1,11 +1,14 @@
-import films from './../mocks/films';
-import {FilmCategory} from './../consts';
+import {FilmCategory, AuthorizationStatus} from './../consts';
 import {ActionType} from './../store/action';
 
 const initialState = {
-  films: films,
+  films: [],
+  promotedFilm: {},
   filterCategory: FilmCategory.ALL_GENRES,
-  filteredFilms: films,
+  filteredFilms: [],
+  authorizationStatus: AuthorizationStatus.UNKNOWN,
+  areFilmsLoaded: false,
+  isPromotedFilmLoaded: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -15,8 +18,31 @@ const reducer = (state = initialState, action) => {
         ...state,
         filterCategory: action.payload,
         filteredFilms: (action.payload === FilmCategory.ALL_GENRES)
-          ? films
-          : films.filter((film) => film.genre === action.payload),
+          ? state.films
+          : state.films.filter((film) => film.genre === action.payload),
+      };
+    case ActionType.LOAD_FILMS:
+      return {
+        ...state,
+        films: action.payload,
+        filteredFilms: action.payload,
+        areFilmsLoaded: true,
+      };
+    case ActionType.LOAD_PROMOTED_FILM:
+      return {
+        ...state,
+        promotedFilm: action.payload,
+        isPromotedFilmLoaded: true,
+      };
+    case ActionType.REQUIRE_AUTHORIZATION:
+      return {
+        ...state,
+        authorizationStatus: action.payload,
+      };
+    case ActionType.LOGOUT:
+      return {
+        ...state,
+        authorizationStatus: AuthorizationStatus.NO_AUTH,
       };
     default:
       return state;
