@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import {Router, Switch, Route} from 'react-router-dom';
 import Main from '../main/main';
 import SignIn from '../sign-in/sign-in';
 import MyList from '../my-list/my-list';
@@ -13,6 +13,8 @@ import Spinner from '../spinner/spinner';
 import filmProp from '../film/film.prop';
 import {AppRoute} from '../../consts';
 import {isAuthChecking} from '../../utils';
+import browserHistory from '../../browser-history';
+import PrivateRoute from '../private-route/private-route';
 
 
 function App(props) {
@@ -29,13 +31,13 @@ function App(props) {
 
 
   return (
-    <Router>
+    <Router history={browserHistory}>
       <Switch>
         <Route
-          path="/"
+          path={AppRoute.MAIN}
           exact
           render={
-            () => (
+            ({history}) => (
               <Main
                 promotedFilm={promotedFilm}
                 films={films}
@@ -44,16 +46,28 @@ function App(props) {
           }
         >
         </Route>
-        <Route path={AppRoute.LOGIN} exact component={SignIn} />
-        <Route path={AppRoute.MYLIST} exact
+        <Route
+          path={AppRoute.LOGIN}
+          exact
           render={
-            () => <MyList films={films.slice(5)} />
+            ({history}) => (
+              <SignIn />
+            )
+          }
+        />
+        <PrivateRoute
+          path={AppRoute.MYLIST}
+          exact
+          render={
+            ({history}) => <MyList films={films.slice(5)} />
           }
         >
-        </Route>
-        <Route path={`${AppRoute.FILMS}/:id`} exact
+        </PrivateRoute>
+        <Route
+          path={`${AppRoute.FILMS}/:id`}
+          exact
           render={
-            ({match}) => (
+            ({history, match}) => (
               <Film
                 film={films.find((film) => String(film.id) === String(match.params.id))}
                 similarFilms={films.slice(0, 4)}
@@ -62,17 +76,21 @@ function App(props) {
           }
         >
         </Route>
-        <Route path={`${AppRoute.FILMS}/:id${AppRoute.REVIEW}`} exact
+        <PrivateRoute
+          path={`${AppRoute.FILMS}/:id${AppRoute.REVIEW}`}
+          exact
           render={
-            ({match}) => (
+            ({history, match}) => (
               <AddReview film={films.find((film) => String(film.id) === String(match.params.id))} />
             )
           }
         >
-        </Route>
-        <Route path={`${AppRoute.PLAYER}/:id`} exact
+        </PrivateRoute>
+        <Route
+          path={`${AppRoute.PLAYER}/:id`}
+          exact
           render={
-            ({match}) => (
+            ({history, match}) => (
               <Player film={films.find((film) => String(film.id) === String(match.params.id))} />
             )
           }

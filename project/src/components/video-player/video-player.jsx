@@ -11,15 +11,13 @@ function VideoPlayer({cover, src, width, height, isActive, muted}) {
       setIsPlaying(isActive);
       if (isActive) {
         timerId.current = setTimeout(() => {
-          videoRef.current.play();
+          videoRef.current?.play();
         }, 1000);
 
       } else {
         clearTimeout(timerId.current);
         videoRef.current.load();
       }
-
-      // return () => {clearTimeout(timerId.current);};
     }
   }, [isActive, isPlaying]);
 

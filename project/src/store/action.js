@@ -4,6 +4,7 @@ export const ActionType = {
   LOAD_PROMOTED_FILM: 'load-promoted-film',
   REQUIRE_AUTHORIZATION: 'require-authorization',
   LOGOUT: 'logout',
+  REDIRECT_TO_ROUTE: 'redirect-to-route',
 };
 
 export const ActionCreator = {
@@ -24,6 +25,10 @@ export const ActionCreator = {
     payload: status,
   }),
   logout: () => ({
-    type: ActionCreator.LOGOUT,
+    type: ActionType.LOGOUT,
+  }),
+  redirectToRoute: (url) => ({
+    type: ActionType.REDIRECT_TO_ROUTE,
+    payload: url,
   }),
 };
