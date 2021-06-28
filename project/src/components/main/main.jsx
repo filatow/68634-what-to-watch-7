@@ -10,7 +10,7 @@ import UserBlock from '../user-block/user-block';
 
 
 function Main(props) {
-  const {authorizationStatus, filteredFilms, promotedFilm} = props;
+  const {filteredFilms, promotedFilm} = props;
   const {title, genre, release, backgroundImage, poster} = promotedFilm;
 
   return (
@@ -31,9 +31,7 @@ function Main(props) {
             </Link>
           </div>
 
-          <UserBlock
-            authorizationStatus={authorizationStatus}
-          />
+          <UserBlock />
         </header>
 
         <div className="film-card__wrap">
@@ -101,12 +99,12 @@ function Main(props) {
 Main.propTypes = {
   filteredFilms: PropTypes.arrayOf(filmProp).isRequired,
   promotedFilm: filmProp,
-  authorizationStatus: PropTypes.string.isRequired,
+  // authorizationStatus: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   filteredFilms: state.filteredFilms,
-  authorizationStatus: state.authorizationStatus,
+  // authorizationStatus: state.authorizationStatus,
 });
 
 export {Main};

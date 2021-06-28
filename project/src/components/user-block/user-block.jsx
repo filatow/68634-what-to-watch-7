@@ -2,8 +2,10 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus} from '../../consts';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import {logout} from '../../store/api-actions';
 
-function UserBlock({authorizationStatus}) {
+function UserBlock({authorizationStatus, signout}) {
   switch (authorizationStatus) {
     case AuthorizationStatus.AUTH:
       return (
@@ -14,7 +16,17 @@ function UserBlock({authorizationStatus}) {
             </div>
           </li>
           <li className="user-block__item">
-            <Link to={AppRoute.LOGIN} className="user-block__link">Sign out</Link>
+            <Link
+              // to={AppRoute.LOGIN}
+              className="user-block__link"
+              onClick={(evt) => {
+                evt.preventDefault();
+
+                signout();
+              }}
+            >
+              Sign out
+            </Link>
           </li>
         </ul>
       );
@@ -31,7 +43,19 @@ function UserBlock({authorizationStatus}) {
 
 UserBlock.propTypes = {
   authorizationStatus: PropTypes.string.isRequired,
+  signout: PropTypes.func.isRequired,
 };
 
-export default UserBlock;
+const mapStateToProps = (state) => ({
+  authorizationStatus: state.authorizationStatus,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  signout() {
+    dispatch(logout());
+  },
+});
+
+export {UserBlock};
+export default connect(mapStateToProps, mapDispatchToProps)(UserBlock);
 

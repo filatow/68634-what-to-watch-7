@@ -5,6 +5,7 @@ import FilmList from '../film-list/film-list';
 import FilmTabs from '../film-tabs/film-tabs';
 import {Link} from 'react-router-dom';
 import {AppRoute} from '../../consts';
+import UserBlock from '../user-block/user-block';
 import Page404 from '../page-404/page-404';
 
 function Film({film, similarFilms}) {
@@ -41,16 +42,7 @@ function Film({film, similarFilms}) {
               </Link>
             </div>
 
-            <ul className="user-block">
-              <li className="user-block__item">
-                <div className="user-block__avatar">
-                  <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
-                </div>
-              </li>
-              <li className="user-block__item">
-                <Link to={AppRoute.LOGIN} className="user-block__link">Sign out</Link>
-              </li>
-            </ul>
+            <UserBlock />
           </header>
 
           <div className="film-card__wrap">
