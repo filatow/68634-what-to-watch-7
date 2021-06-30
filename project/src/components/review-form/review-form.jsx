@@ -1,21 +1,54 @@
-import React, {useState} from 'react';
-// import PropTypes from 'prop-types';
+import React, {useState, useEffect} from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import {postComment} from '../../store/api-actions';
+import {ActionCreator} from '../../store/action';
+import ErrorMessage from '../error-message/error-message';
 
 
-function ReviewForm(props) {
+function ReviewForm({filmId, postUserComment, errorCode, resetErrorCode}) {
   const [rating, setRating] = useState('');
-  const [text, setText] = useState('');
+  const [comment, setComment] = useState('');
+  const [isReadyToSubmit, setIsReadyToSubmit] = useState(false);
 
   function ratingClickHandler(evt) {
     setRating(evt.target.value);
   }
 
   function textareaInputHandler(evt) {
-    setText(evt.target.value);
+    setComment(evt.target.value);
   }
 
+  useEffect(() => {
+    resetErrorCode();
+  }, [resetErrorCode]);
+
+  useEffect(() => {
+    if ((comment.length >= 50) && (comment.length <= 400) && rating) {
+      setIsReadyToSubmit(true);
+    } else {
+      setIsReadyToSubmit(false);
+    }
+  }, [comment, rating]);
+
+  function onSubmit(evt) {
+    evt.preventDefault();
+
+    if (!isReadyToSubmit) {
+      return;
+    }
+
+    setIsReadyToSubmit(false);
+    postUserComment(filmId, {rating, comment});
+  }
+
+
   return (
-    <form action="#" className="add-review__form">
+    <form
+      action="#"
+      className="add-review__form"
+      onSubmit={onSubmit}
+    >
       <div className="rating">
         <div className="rating__stars">
           <input className="rating__input" id="star-10" type="radio" name="rating" value="10" onChange={ratingClickHandler} checked={rating === '10'} />
@@ -51,18 +84,48 @@ function ReviewForm(props) {
       </div>
 
       <div className="add-review__text">
-        <textarea className="add-review__textarea" name="review-text" id="review-text" placeholder="Review text" onChange={textareaInputHandler} value={text}></textarea>
+        <textarea
+          className="add-review__textarea"
+          name="review-text"
+          id="review-text"
+          placeholder="Review text"
+          onChange={textareaInputHandler}
+          value={comment}
+        />
         <div className="add-review__submit">
-          <button className="add-review__btn" type="submit">Post</button>
+          <button
+            className="add-review__btn"
+            type="submit"
+            disabled={!isReadyToSubmit}
+          >
+            Post
+          </button>
         </div>
       </div>
+      {errorCode ? <ErrorMessage errorCode={errorCode} /> : ''}
     </form>
   );
 }
 
 ReviewForm.propTypes = {
-
+  filmId: PropTypes.number.isRequired,
+  postUserComment: PropTypes.func.isRequired,
+  errorCode: PropTypes.number,
+  resetErrorCode: PropTypes.func.isRequired,
 };
 
-export default ReviewForm;
+const mapStateToProps = (state) => ({
+  errorCode: state.newCommentErrorCode,
+});
 
+const mapDispatchToProps = (dispatch) => ({
+  postUserComment(filmId, newComment) {
+    dispatch(postComment(filmId, newComment));
+  },
+  resetErrorCode() {
+    dispatch(ActionCreator.nullifyNewCommentErrorCode());
+  },
+});
+
+export {ReviewForm};
+export default connect(mapStateToProps, mapDispatchToProps)(ReviewForm);

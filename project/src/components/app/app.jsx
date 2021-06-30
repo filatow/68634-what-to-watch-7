@@ -69,8 +69,7 @@ function App(props) {
           render={
             ({history, match}) => (
               <Film
-                film={films.find((film) => String(film.id) === String(match.params.id))}
-                similarFilms={films.slice(0, 4)}
+                filmId={match.params.id}
               />
             )
           }
@@ -81,7 +80,9 @@ function App(props) {
           exact
           render={
             ({history, match}) => (
-              <AddReview film={films.find((film) => String(film.id) === String(match.params.id))} />
+              <AddReview
+                filmId={match.params.id}
+              />
             )
           }
         >

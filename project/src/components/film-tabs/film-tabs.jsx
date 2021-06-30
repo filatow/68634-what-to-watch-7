@@ -40,7 +40,7 @@ function FilmTabs({film}) {
       </nav>
       {activeTab === TAB_NAMES[0] && <OverviewTab film={film} />}
       {activeTab === TAB_NAMES[1] && <DetailsTab film={film} />}
-      {activeTab === TAB_NAMES[2] && <ReviewsTab filmId={film.id} reviews={reviews} />}
+      {activeTab === TAB_NAMES[2] && <ReviewsTab filmId={film.id} comments={reviews} />}
     </>
   );
 }

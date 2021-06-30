@@ -1,3 +1,8 @@
+export const HttpCode = {
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+};
+
 export const AppRoute = {
   MAIN: '/',
   LOGIN: '/login',
@@ -9,6 +14,8 @@ export const AppRoute = {
 
 export const APIRoute = {
   FILMS: '/films',
+  SIMILAR: '/similar',
+  COMMENTS: '/comments',
   LOGIN: '/login',
   LOGOUT: '/logout',
   PROMO: '/promo',
@@ -24,3 +31,8 @@ export const AuthorizationStatus = {
   UNKNOWN: 'unknown',
 };
 
+export const LoadedData = {
+  CURRENT_FILM: 'currentFilm',
+  FILM_COMMENTS: 'filmComments',
+  SIMILAR_FILMS: 'similarFilms',
+};

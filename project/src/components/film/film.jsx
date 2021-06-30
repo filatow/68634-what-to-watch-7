@@ -1,15 +1,37 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import filmProp from './film.prop';
 import FilmList from '../film-list/film-list';
 import FilmTabs from '../film-tabs/film-tabs';
 import {Link} from 'react-router-dom';
-import {AppRoute} from '../../consts';
+import {AppRoute, LoadedData, AuthorizationStatus} from '../../consts';
 import UserBlock from '../user-block/user-block';
+import Spinner from '../spinner/spinner';
 import Page404 from '../page-404/page-404';
+import { connect } from 'react-redux';
+import { fetchCurrentFilm, fetchSimilarFilms } from '../../store/api-actions';
 
-function Film({film, similarFilms}) {
-  if (!film) {
+function Film(props) {
+  const {
+    filmId,
+    film,
+    similarFilms,
+    getFilm,
+    isDataLoaded,
+    getSimilarFilms,
+    isAuthorized,
+  } = props;
+
+  useEffect(() => {
+    getFilm(filmId);
+    getSimilarFilms(filmId);
+  }, [filmId, getFilm, getSimilarFilms]);
+
+  if (!isDataLoaded) {
+    return <Spinner />;
+  }
+
+  if (!Object.keys(film).length) {
     return <Page404 />;
   }
 
@@ -22,6 +44,14 @@ function Film({film, similarFilms}) {
     id,
   } = film;
 
+  const addReviewButton = (
+    <Link
+      to={`${AppRoute.FILMS}/${id}${AppRoute.REVIEW}`}
+      className="btn film-card__button"
+    >
+      Add review
+    </Link>
+  );
 
   return (
     <React.Fragment>
@@ -66,7 +96,8 @@ function Film({film, similarFilms}) {
                   </svg>
                   <span>My list</span>
                 </button>
-                <Link to={`${AppRoute.FILMS}/${id}${AppRoute.REVIEW}`} className="btn film-card__button">Add review</Link>
+
+                {isAuthorized ? addReviewButton : ''}
               </div>
             </div>
           </div>
@@ -115,9 +146,36 @@ function Film({film, similarFilms}) {
 }
 
 Film.propTypes = {
-  film: filmProp,
+  filmId: PropTypes.string.isRequired,
+  film: PropTypes.oneOfType([
+    filmProp,
+    PropTypes.shape({}),
+  ]),
+  getFilm: PropTypes.func.isRequired,
+  getSimilarFilms: PropTypes.func.isRequired,
+  isDataLoaded: PropTypes.bool.isRequired,
+  isAuthorized: PropTypes.bool.isRequired,
   similarFilms: PropTypes.arrayOf(filmProp).isRequired,
 };
 
-export default Film;
+const mapStateToProps = (state) => ({
+  film: state.currentFilm,
+  similarFilms: state.similarFilms,
+  isDataLoaded: !(
+    state.isLoading[LoadedData.CURRENT_FILM] || state.isLoading[LoadedData.SIMILAR_FILMS]
+  ),
+  isAuthorized: state.authorizationStatus === AuthorizationStatus.AUTH,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getFilm(id) {
+    dispatch(fetchCurrentFilm(id));
+  },
+  getSimilarFilms(id) {
+    dispatch(fetchSimilarFilms(id));
+  },
+});
+
+export {Film};
+export default connect(mapStateToProps, mapDispatchToProps)(Film);
 
