@@ -1,14 +1,25 @@
-import {FilmCategory, AuthorizationStatus} from './../consts';
+import {FilmCategory, AuthorizationStatus, LoadedData} from './../consts';
 import {ActionType} from './../store/action';
+
+const getLoadingObject = (source = {}) => Array.from(Object.values(source))
+  .reduce((accum, value) => {
+    accum[value] = false;
+    return accum;
+  }, {});
 
 const initialState = {
   films: [],
   promotedFilm: {},
+  currentFilm: {},
+  currentFilmComments: [],
+  similarFilms: [],
+  isLoading: getLoadingObject(LoadedData),
   filterCategory: FilmCategory.ALL_GENRES,
   filteredFilms: [],
   authorizationStatus: AuthorizationStatus.UNKNOWN,
   areFilmsLoaded: false,
   isPromotedFilmLoaded: false,
+  newCommentErrorCode: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -33,6 +44,52 @@ const reducer = (state = initialState, action) => {
         ...state,
         promotedFilm: action.payload,
         isPromotedFilmLoaded: true,
+      };
+    case ActionType.LOAD_CURRENT_FILM:
+      return {
+        ...state,
+        currentFilm: action.payload,
+      };
+    case ActionType.LOAD_FILM_COMMENTS:
+      return {
+        ...state,
+        currentFilmComments: action.payload,
+      };
+    case ActionType.ADD_NEW_COMMENT:
+      return {
+        ...state,
+        currentFilmComments: action.payload,
+      };
+    case ActionType.NULLIFY_NEW_COMMENT_ERROR_CODE:
+      return {
+        ...state,
+        currentFilmComments: null,
+      };
+    case ActionType.CATCH_NEW_COMMENT_ERROR:
+      return {
+        ...state,
+        newCommentErrorCode: action.payload,
+      };
+    case ActionType.LOAD_SIMILAR_FILMS:
+      return {
+        ...state,
+        similarFilms: action.payload,
+      };
+    case ActionType.START_LOADING:
+      return {
+        ...state,
+        isLoading: {
+          ...state.isLoading,
+          [action.payload]: true,
+        },
+      };
+    case ActionType.STOP_LOADING:
+      return {
+        ...state,
+        isLoading: {
+          ...state.isLoading,
+          [action.payload]: false,
+        },
       };
     case ActionType.REQUIRE_AUTHORIZATION:
       return {

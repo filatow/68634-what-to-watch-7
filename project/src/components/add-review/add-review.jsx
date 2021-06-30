@@ -1,12 +1,37 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import PropTypes from 'prop-types';
 import filmProp from '../film/film.prop';
 import {Link} from 'react-router-dom';
-import {AppRoute} from '../../consts';
+import {AppRoute, LoadedData} from '../../consts';
 import ReviewForm from '../review-form/review-form';
 import UserBlock from '../user-block/user-block';
+import { connect } from 'react-redux';
+import {fetchCurrentFilm} from '../../store/api-actions';
+import Page404 from '../page-404/page-404';
+import Spinner from '../spinner/spinner';
 
-function AddReview({film}) {
-  const {title, backgroundImage, poster, id} = film;
+function AddReview({filmId, currentFilm, getFilm, isDataLoaded}) {
+
+  useEffect(() => {
+    if (currentFilm.id !== parseInt(filmId, 10)) {
+      getFilm(filmId);
+    }
+  }, [filmId, currentFilm, getFilm]);
+
+  if (!isDataLoaded) {
+    return <Spinner />;
+  }
+
+  if (!Object.keys(currentFilm).length) {
+    return <Page404 />;
+  }
+
+  const {
+    title,
+    backgroundImage,
+    poster,
+    id,
+  } = currentFilm;
 
   return (
     <section className="film-card film-card--full">
@@ -52,7 +77,7 @@ function AddReview({film}) {
       </div>
 
       <div className="add-review">
-        <ReviewForm />
+        <ReviewForm filmId={id} />
       </div>
 
     </section>
@@ -60,8 +85,29 @@ function AddReview({film}) {
 }
 
 AddReview.propTypes = {
-  film: filmProp,
+  filmId: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
+  currentFilm: PropTypes.oneOfType([
+    filmProp,
+    PropTypes.shape({}),
+  ]).isRequired,
+  isDataLoaded: PropTypes.bool.isRequired,
+  getFilm: PropTypes.func.isRequired,
 };
 
-export default AddReview;
+const mapStateToProps = (state) => ({
+  currentFilm: state.currentFilm,
+  isDataLoaded: !state.isLoading[LoadedData.CURRENT_FILM],
+});
 
+const mapDispatchToProps = (dispatch) => ({
+  getFilm(id) {
+    dispatch(fetchCurrentFilm(id));
+  },
+});
+
+
+export {AddReview};
+export default connect(mapStateToProps, mapDispatchToProps)(AddReview);

@@ -24,6 +24,7 @@ function UserBlock({authorizationStatus, signout}) {
 
                 signout();
               }}
+              to="/"
             >
               Sign out
             </Link>

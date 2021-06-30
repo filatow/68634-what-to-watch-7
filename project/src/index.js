@@ -25,6 +25,7 @@ const store = createStore(
 );
 
 store.dispatch(checkAuth());
+// Перенести в Main
 store.dispatch(fetchFilmList());
 store.dispatch(fetchPromotedFilm());
 
