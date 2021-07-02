@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
@@ -7,11 +7,34 @@ import filmProp from '../film/film.prop';
 import FilmList from '../film-list/film-list';
 import GenreList from '../genre-list/genre-list';
 import UserBlock from '../user-block/user-block';
+import MoreButton from '../more-button/more-button';
 
+const BUNCH_FILM_COUNT = 8;
 
 function Main(props) {
   const {filteredFilms, promotedFilm} = props;
   const {title, genre, release, backgroundImage, poster} = promotedFilm;
+
+
+  const [filmsMustBeShown, setFilmsMustBeShown] = useState([]);
+  const [filmsMustBeShownCount, setFilmsMustBeShownCount] = useState(BUNCH_FILM_COUNT);
+  const [isMoreButtonVisible, setIsMoreButtonVisible] =
+    useState(filteredFilms.length > BUNCH_FILM_COUNT);
+
+  useEffect(() => {
+    setFilmsMustBeShown(filteredFilms.slice(0, filmsMustBeShownCount));
+    if (filteredFilms.length === filmsMustBeShownCount) {
+      setIsMoreButtonVisible(false);
+    }
+  }, [filteredFilms, filmsMustBeShownCount]);
+
+  const onMoreButtonClick = () => {
+    setFilmsMustBeShownCount(
+      (prev) => (prev + BUNCH_FILM_COUNT) > filteredFilms.length
+        ? filteredFilms.length
+        : (prev + BUNCH_FILM_COUNT),
+    );
+  };
 
   return (
     <React.Fragment>
@@ -71,11 +94,10 @@ function Main(props) {
 
           <GenreList/>
 
-          <FilmList films={filteredFilms} />
+          <FilmList films={filmsMustBeShown} />
 
-          <div className="catalog__more">
-            <button className="catalog__button" type="button">Show more</button>
-          </div>
+          {isMoreButtonVisible ? <MoreButton onClick={onMoreButtonClick} /> : ''}
+
         </section>
 
         <footer className="page-footer">
@@ -99,12 +121,10 @@ function Main(props) {
 Main.propTypes = {
   filteredFilms: PropTypes.arrayOf(filmProp).isRequired,
   promotedFilm: filmProp,
-  // authorizationStatus: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   filteredFilms: state.filteredFilms,
-  // authorizationStatus: state.authorizationStatus,
 });
 
 export {Main};
