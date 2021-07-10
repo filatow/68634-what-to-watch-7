@@ -5,11 +5,18 @@ import FilmList from '../film-list/film-list';
 import FilmTabs from '../film-tabs/film-tabs';
 import {Link} from 'react-router-dom';
 import {AppRoute, LoadedData, AuthorizationStatus} from '../../consts';
-import UserBlock from '../user-block/user-block';
 import Spinner from '../spinner/spinner';
 import Page404 from '../page-404/page-404';
 import { connect } from 'react-redux';
-import { fetchCurrentFilm, fetchSimilarFilms } from '../../store/api-actions';
+import {
+  fetchCurrentFilm,
+  fetchSimilarFilms,
+  setFilmFavoriteStatus
+} from '../../store/api-actions';
+import Header from '../header/header';
+import MyListButton from '../my-list-button/my-list-button';
+import ReviewButton from '../review-button/review-button';
+import PlayButton from '../play-button/play-button';
 
 function Film(props) {
   const {
@@ -20,6 +27,7 @@ function Film(props) {
     isDataLoaded,
     getSimilarFilms,
     isAuthorized,
+    toggleFavoriteStatus,
   } = props;
 
   useEffect(() => {
@@ -42,16 +50,10 @@ function Film(props) {
     cover,
     genre,
     id,
+    isFavorite,
   } = film;
 
-  const addReviewButton = (
-    <Link
-      to={`${AppRoute.FILMS}/${id}${AppRoute.REVIEW}`}
-      className="btn film-card__button"
-    >
-      Add review
-    </Link>
-  );
+  const onMyListButtonClick = toggleFavoriteStatus.bind(null, id, !isFavorite);
 
   return (
     <React.Fragment>
@@ -63,17 +65,7 @@ function Film(props) {
 
           <h1 className="visually-hidden">WTW</h1>
 
-          <header className="page-header film-card__head">
-            <div className="logo">
-              <Link to={AppRoute.MAIN} className="logo__link">
-                <span className="logo__letter logo__letter--1">W</span>
-                <span className="logo__letter logo__letter--2">T</span>
-                <span className="logo__letter logo__letter--3">W</span>
-              </Link>
-            </div>
-
-            <UserBlock />
-          </header>
+          <Header />
 
           <div className="film-card__wrap">
             <div className="film-card__desc">
@@ -84,20 +76,11 @@ function Film(props) {
               </p>
 
               <div className="film-card__buttons">
-                <button className="btn btn--play film-card__button" type="button">
-                  <svg viewBox="0 0 19 19" width="19" height="19">
-                    <use xlinkHref="#play-s"></use>
-                  </svg>
-                  <span>Play</span>
-                </button>
-                <button className="btn btn--list film-card__button" type="button">
-                  <svg viewBox="0 0 19 20" width="19" height="20">
-                    <use xlinkHref="#add"></use>
-                  </svg>
-                  <span>My list</span>
-                </button>
-
-                {isAuthorized ? addReviewButton : ''}
+                <PlayButton filmId={id} />
+                {isAuthorized
+                  ? <MyListButton isInList={isFavorite} onClick={onMyListButtonClick} />
+                  : ''}
+                {isAuthorized ? <ReviewButton filmId={id} /> : ''}
               </div>
             </div>
           </div>
@@ -156,6 +139,7 @@ Film.propTypes = {
   isDataLoaded: PropTypes.bool.isRequired,
   isAuthorized: PropTypes.bool.isRequired,
   similarFilms: PropTypes.arrayOf(filmProp).isRequired,
+  toggleFavoriteStatus: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -173,6 +157,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   getSimilarFilms(id) {
     dispatch(fetchSimilarFilms(id));
+  },
+  toggleFavoriteStatus(filmId, isFavorite) {
+    dispatch(setFilmFavoriteStatus(filmId, Number(isFavorite)));
   },
 });
 

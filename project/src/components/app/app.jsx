@@ -10,7 +10,6 @@ import AddReview from '../add-review/add-review';
 import Player from '../player/player';
 import Page404 from '../page-404/page-404';
 import Spinner from '../spinner/spinner';
-import filmProp from '../film/film.prop';
 import {AppRoute} from '../../consts';
 import {isAuthChecking} from '../../utils';
 import browserHistory from '../../browser-history';
@@ -20,12 +19,11 @@ import PrivateRoute from '../private-route/private-route';
 function App(props) {
   const {
     authorizationStatus,
-    isDataLoaded,
-    films,
-    promotedFilm,
+    // isDataLoaded,
   } = props;
 
-  if (isAuthChecking(authorizationStatus) || !isDataLoaded) {
+  // if (isAuthChecking(authorizationStatus) || !isDataLoaded) {
+  if (isAuthChecking(authorizationStatus)) {
     return <Spinner />;
   }
 
@@ -38,10 +36,7 @@ function App(props) {
           exact
           render={
             ({history}) => (
-              <Main
-                promotedFilm={promotedFilm}
-                films={films}
-              />
+              <Main />
             )
           }
         >
@@ -59,7 +54,7 @@ function App(props) {
           path={AppRoute.MYLIST}
           exact
           render={
-            ({history}) => <MyList films={films.slice(5)} />
+            ({history}) => <MyList />
           }
         >
         </PrivateRoute>
@@ -92,7 +87,9 @@ function App(props) {
           exact
           render={
             ({history, match}) => (
-              <Player film={films.find((film) => String(film.id) === String(match.params.id))} />
+              <Player
+                filmId={match.params.id}
+              />
             )
           }
         >
@@ -110,19 +107,14 @@ function App(props) {
 
 App.propTypes = {
   authorizationStatus: PropTypes.string.isRequired,
-  isDataLoaded: PropTypes.bool.isRequired,
-  films: PropTypes.arrayOf(filmProp).isRequired,
-  promotedFilm: PropTypes.oneOfType([
-    filmProp,
-    PropTypes.shape({}),
-  ]).isRequired,
+  // isDataLoaded: PropTypes.bool.isRequired,
+  // films: PropTypes.arrayOf(filmProp).isRequired,
 };
 
 const mapStateToProps = (state) => ({
   authorizationStatus: state.authorizationStatus,
-  isDataLoaded: state.areFilmsLoaded && state.isPromotedFilmLoaded,
-  films: state.films,
-  promotedFilm: state.promotedFilm,
+  // isDataLoaded: state.areFilmsLoaded,
+  // films: state.films,
 });
 
 export {App};

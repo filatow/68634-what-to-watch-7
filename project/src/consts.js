@@ -19,6 +19,7 @@ export const APIRoute = {
   LOGIN: '/login',
   LOGOUT: '/logout',
   PROMO: '/promo',
+  FAVORITE: '/favorite',
 };
 
 export const FilmCategory = {
@@ -32,7 +33,10 @@ export const AuthorizationStatus = {
 };
 
 export const LoadedData = {
+  FILMS: 'films',
   CURRENT_FILM: 'currentFilm',
   FILM_COMMENTS: 'filmComments',
   SIMILAR_FILMS: 'similarFilms',
+  PROMOTED_FILM: 'promotedFilm',
+  FAVORITE_FILMS: 'favoriteFilms',
 };

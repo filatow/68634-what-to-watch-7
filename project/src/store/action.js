@@ -4,6 +4,7 @@ export const ActionType = {
   LOAD_PROMOTED_FILM: 'load-promoted-film',
   LOAD_CURRENT_FILM: 'load-current-film',
   LOAD_SIMILAR_FILMS: 'load-similar-films',
+  LOAD_FAVORITE_FILMS: 'load-favorite-films',
   LOAD_FILM_COMMENTS: 'load-film-comments',
   ADD_NEW_COMMENT: 'add-new-comment',
   CATCH_NEW_COMMENT_ERROR: 'catch-new-comment-error',
@@ -32,9 +33,13 @@ export const ActionCreator = {
     type: ActionType.LOAD_CURRENT_FILM,
     payload: film,
   }),
-  loadSimilarFilms: (film) => ({
+  loadSimilarFilms: (films) => ({
     type: ActionType.LOAD_SIMILAR_FILMS,
-    payload: film,
+    payload: films,
+  }),
+  loadFavoriteFilms: (films) => ({
+    type: ActionType.LOAD_FAVORITE_FILMS,
+    payload: films,
   }),
   loadFilmComments: (comments) => ({
     type: ActionType.LOAD_FILM_COMMENTS,
