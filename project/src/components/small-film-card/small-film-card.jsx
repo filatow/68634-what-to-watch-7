@@ -20,8 +20,7 @@ function SmallFilmCard({film,onHover, isActive}) {
         onHover({});
       }}
     >
-
-      <div className="small-film-card__video">
+      <Link className="small-film-card__video" to={`${AppRoute.FILMS}/${id}`}>
         <VideoPlayer
           cover={cover}
           src={previewVideo}
@@ -30,7 +29,7 @@ function SmallFilmCard({film,onHover, isActive}) {
           isActive={isActive}
           muted
         />
-      </div>
+      </Link>
 
       <h3 className="small-film-card__title">
         <Link className="small-film-card__link" to={`${AppRoute.FILMS}/${id}`}>{title}</Link>

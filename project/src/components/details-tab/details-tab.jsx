@@ -18,9 +18,9 @@ function DetailsTab({film}) {
   const filmStarring = starring.map((star, ind) =>{
     if (ind !== starring.length - 1) {
       return (
-        <>
+        <React.Fragment key={star}>
           {star}, <br />
-        </>);
+        </React.Fragment>);
     }
     return star;
   });

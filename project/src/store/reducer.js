@@ -13,12 +13,12 @@ const initialState = {
   currentFilm: {},
   currentFilmComments: [],
   similarFilms: [],
+  favoriteFilms: [],
   isLoading: getLoadingObject(LoadedData),
   filterCategory: FilmCategory.ALL_GENRES,
   filteredFilms: [],
   authorizationStatus: AuthorizationStatus.UNKNOWN,
-  areFilmsLoaded: false,
-  isPromotedFilmLoaded: false,
+  // areFilmsLoaded: false,
   newCommentErrorCode: null,
 };
 
@@ -37,18 +37,21 @@ const reducer = (state = initialState, action) => {
         ...state,
         films: action.payload,
         filteredFilms: action.payload,
-        areFilmsLoaded: true,
       };
     case ActionType.LOAD_PROMOTED_FILM:
       return {
         ...state,
         promotedFilm: action.payload,
-        isPromotedFilmLoaded: true,
       };
     case ActionType.LOAD_CURRENT_FILM:
       return {
         ...state,
         currentFilm: action.payload,
+      };
+    case ActionType.LOAD_FAVORITE_FILMS:
+      return {
+        ...state,
+        favoriteFilms: action.payload,
       };
     case ActionType.LOAD_FILM_COMMENTS:
       return {

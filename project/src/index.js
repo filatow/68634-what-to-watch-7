@@ -8,7 +8,8 @@ import {reducer} from './store/reducer';
 import ReduxThunk from 'redux-thunk';
 import {createAPI} from './services/api';
 import {ActionCreator} from './store/action';
-import {checkAuth, fetchFilmList, fetchPromotedFilm} from './store/api-actions';
+// import {checkAuth, fetchFilmList} from './store/api-actions';
+import {checkAuth} from './store/api-actions';
 import {AuthorizationStatus} from './consts';
 import {redirect} from './store/middlewares/redirect';
 
@@ -26,8 +27,7 @@ const store = createStore(
 
 store.dispatch(checkAuth());
 // Перенести в Main
-store.dispatch(fetchFilmList());
-store.dispatch(fetchPromotedFilm());
+// store.dispatch(fetchFilmList());
 
 ReactDOM.render(
   <React.StrictMode>

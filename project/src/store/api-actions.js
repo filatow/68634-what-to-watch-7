@@ -3,15 +3,21 @@ import {AuthorizationStatus,AppRoute, APIRoute, LoadedData} from '../consts';
 import {adaptFilmToClient} from '../utils';
 
 export const fetchFilmList = () => (dispatch, _getState, api) => {
+  dispatch(ActionCreator.startLoading(LoadedData.FILMS));
   api.get(APIRoute.FILMS)
     .then(({data}) => dispatch(ActionCreator.loadFilms(
       data.map((film) => adaptFilmToClient(film)),
-    )));
+    )))
+    .catch(() => {})
+    .finally(() => dispatch(ActionCreator.stopLoading(LoadedData.FILMS)));
 };
 
 export const fetchPromotedFilm = () => (dispatch, _getState, api) => {
+  dispatch(ActionCreator.startLoading(LoadedData.PROMOTED_FILM));
   api.get(APIRoute.PROMO)
-    .then(({data}) => dispatch(ActionCreator.loadPromotedFilm(adaptFilmToClient(data))));
+    .then(({data}) => dispatch(ActionCreator.loadPromotedFilm(adaptFilmToClient(data))))
+    .catch(() => {})
+    .finally(() => dispatch(ActionCreator.stopLoading(LoadedData.PROMOTED_FILM)));
 };
 
 export const fetchCurrentFilm = (filmId) => (dispatch, _getState, api) => {
@@ -31,6 +37,16 @@ export const fetchSimilarFilms = (filmId) => (dispatch, _getState, api) => {
     )))
     .catch(() => {})
     .finally(() => dispatch(ActionCreator.stopLoading(LoadedData.SIMILAR_FILMS)));
+};
+
+export const fetchFavoriteFilms = (filmId) => (dispatch, _getState, api) => {
+  dispatch(ActionCreator.startLoading(LoadedData.FAVORITE_FILMS));
+  api.get(APIRoute.FAVORITE)
+    .then(({data}) => dispatch(ActionCreator.loadFavoriteFilms(
+      data.map((film) => adaptFilmToClient(film)),
+    )))
+    .catch(() => {})
+    .finally(() => dispatch(ActionCreator.stopLoading(LoadedData.FAVORITE_FILMS)));
 };
 
 
@@ -66,4 +82,18 @@ export const postComment = (filmId, newComment) => (dispatch, _getState, api) =>
     .then(({data}) => dispatch(ActionCreator.addNewComment(data)))
     .then(() => dispatch(ActionCreator.redirectToRoute(`${AppRoute.FILMS}/${filmId}`)))
     .catch(({response}) => dispatch(ActionCreator.catchNewCommentError(response.status)));
+};
+
+export const setFilmFavoriteStatus = (filmId, statusId) => (dispatch, _getState, api) => {
+  dispatch(ActionCreator.startLoading(LoadedData.CURRENT_FILM));
+  api.post(`${APIRoute.FAVORITE}/${filmId}/${statusId}`)
+    .then(({data}) => dispatch(ActionCreator.loadCurrentFilm(adaptFilmToClient(data))))
+    .finally(() => dispatch(ActionCreator.stopLoading(LoadedData.CURRENT_FILM)));
+};
+
+export const setPromotedFilmFavoriteStatus = (filmId, statusId) => (dispatch, _getState, api) => {
+  dispatch(ActionCreator.startLoading(LoadedData.PROMOTED_FILM));
+  api.post(`${APIRoute.FAVORITE}/${filmId}/${statusId}`)
+    .then(({data}) => dispatch(ActionCreator.loadPromotedFilm(adaptFilmToClient(data))))
+    .finally(() => dispatch(ActionCreator.stopLoading(LoadedData.PROMOTED_FILM)));
 };

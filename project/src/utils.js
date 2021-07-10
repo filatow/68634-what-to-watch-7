@@ -23,7 +23,7 @@ export const adaptFilmToClient = (film) => {
       voteCount: film.scores_count,
       starring: film.starring,
       duration: film.run_time,
-      isFavourite: film.is_favourite,
+      isFavorite: film.is_favorite,
     },
   );
 
