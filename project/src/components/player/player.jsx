@@ -8,6 +8,8 @@ import PlayerSpinner from '../player-spinner/player-spinner';
 import Page404 from '../page-404/page-404';
 import { Link } from 'react-router-dom';
 
+import './player.css';
+
 const getHour = (hour) => {
   if (hour === 0) {
     return '';
@@ -32,12 +34,12 @@ const getSecond = (second) => {
   return String(second);
 };
 
-const getPlayerTime = (duration) => {
+const formatPlayerTime = (duration, prefix = '') => {
   const hour = Math.floor(duration / 3600);
   const minute = Math.floor((duration - hour * 3600) / 60);
   const second = duration - hour * 3600 - minute * 60;
 
-  return `-${getHour(hour)}:${getMinute(minute)}:${getSecond(second)}`;
+  return `${prefix}${getHour(hour)}${hour ? ':' : ''}${getMinute(minute)}:${getSecond(second)}`;
 };
 
 const onPauseButtonClick = (video) => {
@@ -65,6 +67,8 @@ const getDuration = (video) => {
   return '0';
 };
 
+const getPercentage = (part, whole) => (part / whole) * 100;
+
 
 function Player({filmId, film, isDataLoaded, getFilm}) {
   useEffect(() => {
@@ -74,16 +78,76 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
   const [isFilmPlaying, setIsFilmPlaying] = useState(false);
   const videoRef = useRef(null);
   const playerRef = useRef(null);
+  const progressRef = useRef(null);
+  const togglerRef = useRef(null);
   const [filmDuration, setFilmDuration] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState('00:00');
+  const [timeElapsed, setTimeElapsed] = useState('00:00');
+
 
   useEffect(() => {
+    let $video = null;
+    const onReadyToPlay = () => {
+      console.log('onReadyToPlay');
+      setFilmDuration(getDuration($video));
+      onPlayButtonClick($video);
+      setIsFilmPlaying(true);
+    };
     if (videoRef?.current) {
-      videoRef.current.addEventListener('canplay', (evt) => {
-        setFilmDuration(getDuration(videoRef.current));
-        setIsFilmPlaying(true);
+      console.log('videoRef?.current', videoRef?.current);
+      $video = videoRef.current;
+      $video.addEventListener('canplay', onReadyToPlay);
+      // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
+      $video.addEventListener('playing', () => {
+        console.log('playing');
+      });
+      $video.addEventListener('waiting', () => {
+        console.log('waiting');
+      });
+      $video.addEventListener('stalled', () => {
+        console.log('stalled');
+      });
+      $video.addEventListener('staloadedmetadatalled', () => {
+        console.log('staloadedmetadatalled');
+      });
+      $video.addEventListener('suspend', () => {
+        console.log('suspend');
+      });
+      $video.addEventListener('progress', () => {
+        console.log('progress');
+      });
+      $video.addEventListener('emptied', () => {
+        console.log('emptied');
       });
     }
+    return () => {
+      if ($video) {
+        $video.removeEventListener('canplay', onReadyToPlay);
+      }
+    };
   });
+
+  const progressBarTimerId = useRef(null);
+
+  useEffect(() => {
+    progressBarTimerId.current = setInterval(() => {
+      if (!videoRef.current) {
+        return;
+      }
+      const currentTime = parseFloat(videoRef.current.currentTime).toFixed(2);
+      setTimeElapsed(currentTime);
+      progressRef.current.value = currentTime;
+      togglerRef.current.style.left =` ${getPercentage(currentTime, filmDuration)}%`;
+      setTimeRemaining(formatPlayerTime(filmDuration - parseInt(currentTime, 10), '-'));
+    }, 1000);
+    return () => {
+      clearInterval(progressBarTimerId.current);
+    };
+  });
+
+  if (!isDataLoaded) {
+    return <PlayerSpinner />;
+  }
 
   if (isDataLoaded && !Object.keys(film).length) {
     return <Page404 />;
@@ -127,28 +191,29 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
   return (
     <div ref={playerRef} className="player">
 
-      {isDataLoaded
-        ? (
-          <video
-            ref={videoRef}
-            className="player__video"
-            src={video}
-            width="100%"
-            height="100%"
-            muted={false}
-            preload='auto'
-            autoPlay
-            onClick={() => {
-              if (isFilmPlaying) {
-                onPauseButtonClick(videoRef.current);
-                setIsFilmPlaying(false);
-              } else {
-                onPlayButtonClick(videoRef.current);
-                setIsFilmPlaying(true);
-              }
-            }}
-          />
-        ) : <PlayerSpinner />}
+      <video
+        ref={videoRef}
+        className="player__video"
+        src={video}
+        width="100%"
+        height="100%"
+        muted={false}
+        // preload="auto"
+        // autoPlay
+        // controls
+        onClick={() => {
+          if (isFilmPlaying) {
+            onPauseButtonClick(videoRef.current);
+            setIsFilmPlaying(false);
+          } else {
+            onPlayButtonClick(videoRef.current);
+            setIsFilmPlaying(true);
+          }
+        }}
+      >
+        {/* <source src={video} type="video/webm;codecs='vp8, vorbis'"></source>
+        <source src={video} type="video/mp4;codecs='avc1.4d002a'"></source> */}
+      </video>
 
       <Link
         to={`${AppRoute.FILMS}/${filmId}`}
@@ -157,18 +222,27 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
         Exit
       </Link>
 
-      <div className="player__controls">
+      <div
+        className="player__controls"
+      >
         <div className="player__controls-row">
           <div className="player__time">
             <progress
+              ref={progressRef}
               className="player__progress"
-              value="30"
+              value="0"
               max={filmDuration}
             />
-            <div className="player__toggler" style={{left: '30%'}}>Toggler</div>
+            <div
+              ref={togglerRef}
+              className="player__toggler"
+              title={formatPlayerTime(parseInt(timeElapsed, 10))}
+            >
+              Toggler
+            </div>
           </div>
           <div className="player__time-value">
-            {getPlayerTime(filmDuration)}
+            {timeRemaining}
           </div>
         </div>
 

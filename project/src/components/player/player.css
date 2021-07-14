@@ -1,0 +1,15 @@
+.player {
+  background-color: #180202;
+}
+
+.player__controls {
+  transition: 1000ms;
+}
+
+.player__controls_invisible {
+  visibility: hidden;
+}
+
+.player__exit_invisible {
+  visibility: hidden;
+}
