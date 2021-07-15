@@ -18,7 +18,6 @@ const initialState = {
   filterCategory: FilmCategory.ALL_GENRES,
   filteredFilms: [],
   authorizationStatus: AuthorizationStatus.UNKNOWN,
-  // areFilmsLoaded: false,
   newCommentErrorCode: null,
 };
 

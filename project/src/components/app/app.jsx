@@ -19,10 +19,8 @@ import PrivateRoute from '../private-route/private-route';
 function App(props) {
   const {
     authorizationStatus,
-    // isDataLoaded,
   } = props;
 
-  // if (isAuthChecking(authorizationStatus) || !isDataLoaded) {
   if (isAuthChecking(authorizationStatus)) {
     return <Spinner />;
   }
@@ -54,7 +52,7 @@ function App(props) {
           path={AppRoute.MYLIST}
           exact
           render={
-            ({history}) => <MyList />
+            () => <MyList />
           }
         >
         </PrivateRoute>
@@ -62,7 +60,7 @@ function App(props) {
           path={`${AppRoute.FILMS}/:id`}
           exact
           render={
-            ({history, match}) => (
+            ({match}) => (
               <Film
                 filmId={match.params.id}
               />
@@ -74,7 +72,7 @@ function App(props) {
           path={`${AppRoute.FILMS}/:id${AppRoute.REVIEW}`}
           exact
           render={
-            ({history, match}) => (
+            ({match}) => (
               <AddReview
                 filmId={match.params.id}
               />
@@ -86,7 +84,7 @@ function App(props) {
           path={`${AppRoute.PLAYER}/:id`}
           exact
           render={
-            ({history, match}) => (
+            ({match}) => (
               <Player
                 filmId={match.params.id}
               />
@@ -107,14 +105,10 @@ function App(props) {
 
 App.propTypes = {
   authorizationStatus: PropTypes.string.isRequired,
-  // isDataLoaded: PropTypes.bool.isRequired,
-  // films: PropTypes.arrayOf(filmProp).isRequired,
 };
 
 const mapStateToProps = (state) => ({
   authorizationStatus: state.authorizationStatus,
-  // isDataLoaded: state.areFilmsLoaded,
-  // films: state.films,
 });
 
 export {App};

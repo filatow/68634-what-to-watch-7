@@ -46,13 +46,14 @@ function Main(props) {
 
   const [filmsMustBeShown, setFilmsMustBeShown] = useState([]);
   const [filmsMustBeShownCount, setFilmsMustBeShownCount] = useState(BUNCH_FILM_COUNT);
-  const [isMoreButtonVisible, setIsMoreButtonVisible] =
-    useState(true);
+  const [isMoreButtonVisible, setIsMoreButtonVisible] = useState(true);
 
   useEffect(() => {
     setFilmsMustBeShown(filteredFilms.slice(0, filmsMustBeShownCount));
-    if (filteredFilms.length === filmsMustBeShownCount) {
+    if (filteredFilms.length <= filmsMustBeShownCount) {
       setIsMoreButtonVisible(false);
+    } else {
+      setIsMoreButtonVisible(true);
     }
   }, [filteredFilms, filmsMustBeShownCount]);
 
@@ -95,13 +96,6 @@ function Main(props) {
               </p>
 
               <div className="film-card__buttons">
-                {/* <button className="btn btn--play film-card__button" type="button">
-                  <svg viewBox="0 0 19 19" width="19" height="19">
-                    <use xlinkHref="#play-s"></use>
-                  </svg>
-                  <span>Play</span>
-                </button> */}
-
                 <PlayButton filmId={id} />
                 <MyListButton
                   isInList={isFavorite}
@@ -116,7 +110,7 @@ function Main(props) {
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
 
-          <GenreList/>
+          <GenreList />
 
           <FilmList films={filmsMustBeShown} />
 
