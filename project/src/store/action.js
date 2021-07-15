@@ -1,19 +1,19 @@
 export const ActionType = {
-  SET_FILTER_CATEGORY: 'set-filter-category',
-  LOAD_FILMS: 'load-films',
-  LOAD_PROMOTED_FILM: 'load-promoted-film',
-  LOAD_CURRENT_FILM: 'load-current-film',
-  LOAD_SIMILAR_FILMS: 'load-similar-films',
-  LOAD_FAVORITE_FILMS: 'load-favorite-films',
-  LOAD_FILM_COMMENTS: 'load-film-comments',
-  ADD_NEW_COMMENT: 'add-new-comment',
-  CATCH_NEW_COMMENT_ERROR: 'catch-new-comment-error',
-  NULLIFY_NEW_COMMENT_ERROR_CODE: 'nullify-new-comment-error-code',
-  START_LOADING: 'start-loading',
-  STOP_LOADING: 'stop-loading',
-  REQUIRE_AUTHORIZATION: 'require-authorization',
-  LOGOUT: 'logout',
-  REDIRECT_TO_ROUTE: 'redirect-to-route',
+  SET_FILTER_CATEGORY: 'main/setFilterCategory',
+  LOAD_FILMS: 'main/loadFilms',
+  LOAD_PROMOTED_FILM: 'main/loadPromotedFilm',
+  REQUIRE_AUTHORIZATION: 'user/requireAuthorization',
+  LOGOUT: 'user/logout',
+  LOAD_FAVORITE_FILMS: 'favorite/loadFavoriteFilms',
+  LOAD_CURRENT: 'film/loadCurrent',
+  LOAD_SIMILAR: 'film/loadSimilar',
+  LOAD_COMMENTS: 'film/loadComments',
+  ADD_NEW_COMMENT: 'film/addNewComment',
+  CATCH_NEW_COMMENT_ERROR: 'film/catchNewCommentError',
+  NULLIFY_NEW_COMMENT_ERROR_CODE: 'film/nullifyNewCommentErrorCode',
+  START_LOADING: 'loading/start',
+  STOP_LOADING: 'loading/stop',
+  REDIRECT_TO_ROUTE: 'middleware/redirectToRoute',
 };
 
 
@@ -32,12 +32,12 @@ export const loadPromotedFilm = (film) => ({
 });
 
 export const loadCurrentFilm = (film) => ({
-  type: ActionType.LOAD_CURRENT_FILM,
+  type: ActionType.LOAD_CURRENT,
   payload: film,
 });
 
 export const loadSimilarFilms = (films) => ({
-  type: ActionType.LOAD_SIMILAR_FILMS,
+  type: ActionType.LOAD_SIMILAR,
   payload: films,
 });
 
@@ -46,7 +46,7 @@ export const loadFavoriteFilms = (films) => ({
   payload: films,
 });
 export const loadFilmComments = (comments) => ({
-  type: ActionType.LOAD_FILM_COMMENTS,
+  type: ActionType.LOAD_COMMENTS,
   payload: comments,
 });
 

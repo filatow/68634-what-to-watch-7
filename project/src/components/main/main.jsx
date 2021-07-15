@@ -148,11 +148,11 @@ Main.propTypes = {
   togglePromotedFilmFavoriteStatus: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  filteredFilms: state.filteredFilms,
-  promotedFilm: state.promotedFilm,
+const mapStateToProps = ({MAIN, LOADING}) => ({
+  filteredFilms: MAIN.filteredFilms,
+  promotedFilm: MAIN.promotedFilm,
   isDataLoaded: !(
-    state.isLoading[LoadedData.PROMOTED_FILM]|| state.isLoading[LoadedData.FILMS]
+    LOADING.isLoading[LoadedData.PROMOTED_FILM]|| LOADING.isLoading[LoadedData.FILMS]
   ),
 });
 

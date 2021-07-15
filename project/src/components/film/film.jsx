@@ -142,13 +142,13 @@ Film.propTypes = {
   toggleFavoriteStatus: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  film: state.currentFilm,
-  similarFilms: state.similarFilms,
+const mapStateToProps = ({USER, FILM, LOADING}) => ({
+  film: FILM.currentFilm,
+  similarFilms: FILM.similarFilms,
   isDataLoaded: !(
-    state.isLoading[LoadedData.CURRENT_FILM] || state.isLoading[LoadedData.SIMILAR_FILMS]
+    LOADING.isLoading[LoadedData.CURRENT_FILM] || LOADING.isLoading[LoadedData.SIMILAR_FILMS]
   ),
-  isAuthorized: state.authorizationStatus === AuthorizationStatus.AUTH,
+  isAuthorized: USER.authorizationStatus === AuthorizationStatus.AUTH,
 });
 
 const mapDispatchToProps = (dispatch) => ({

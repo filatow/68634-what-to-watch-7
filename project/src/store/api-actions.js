@@ -42,7 +42,6 @@ export const fetchCurrentFilm = (filmId) => (dispatch, _getState, api) => {
     .finally(() => dispatch(stopLoading(LoadedData.CURRENT_FILM)));
 };
 
-
 export const fetchSimilarFilms = (filmId) => (dispatch, _getState, api) => {
   dispatch(startLoading(LoadedData.SIMILAR_FILMS));
   api.get(`${APIRoute.FILMS}/${filmId}${APIRoute.SIMILAR}`)

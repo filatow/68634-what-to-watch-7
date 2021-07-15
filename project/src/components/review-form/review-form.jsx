@@ -114,8 +114,8 @@ ReviewForm.propTypes = {
   resetErrorCode: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  errorCode: state.newCommentErrorCode,
+const mapStateToProps = ({FILM}) => ({
+  errorCode: FILM.newCommentErrorCode,
 });
 
 const mapDispatchToProps = (dispatch) => ({

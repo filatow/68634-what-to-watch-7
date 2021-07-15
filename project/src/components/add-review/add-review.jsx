@@ -97,9 +97,9 @@ AddReview.propTypes = {
   getFilm: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  currentFilm: state.currentFilm,
-  isDataLoaded: !state.isLoading[LoadedData.CURRENT_FILM],
+const mapStateToProps = ({FILM, LOADING}) => ({
+  currentFilm: FILM.currentFilm,
+  isDataLoaded: !LOADING.isLoading[LoadedData.CURRENT_FILM],
 });
 
 const mapDispatchToProps = (dispatch) => ({

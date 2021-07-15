@@ -43,9 +43,9 @@ ReviewsTab.propTypes = {
   isDataLoaded: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  comments: state.currentFilmComments,
-  isDataLoaded: !state.isLoading[LoadedData.FILM_COMMENTS],
+const mapStateToProps = ({FILM, LOADING}) => ({
+  comments: FILM.currentFilmComments,
+  isDataLoaded: !LOADING.isLoading[LoadedData.FILM_COMMENTS],
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -282,10 +282,10 @@ Player.propTypes = {
   isDataLoaded: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  film: state.currentFilm,
+const mapStateToProps = ({FILM, LOADING}) => ({
+  film: FILM.currentFilm,
   isDataLoaded: !(
-    state.isLoading[LoadedData.CURRENT_FILM]
+    LOADING.isLoading[LoadedData.CURRENT_FILM]
   ),
 });
 
