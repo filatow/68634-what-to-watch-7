@@ -80,49 +80,51 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
   const playerRef = useRef(null);
   const progressRef = useRef(null);
   const togglerRef = useRef(null);
+  const controlsRef = useRef(null);
   const [filmDuration, setFilmDuration] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState('00:00');
   const [timeElapsed, setTimeElapsed] = useState('00:00');
+  const [controlsTimer, setControlsTimer] = useState(null);
 
+  const handleMouseMove = () => {
+    if (!controlsRef.current) {
+      return;
+    }
+
+    const {current: controls} = controlsRef;
+
+    if (controlsTimer) {
+      clearTimeout(controlsTimer);
+    }
+
+    controls.style.display = 'block';
+
+    setControlsTimer(
+      setTimeout(() => {
+        controls.style.display = 'none';
+      }, 4000),
+    );
+  };
 
   useEffect(() => {
+    if (!videoRef.current) {
+      return;
+    }
+
     let $video = null;
-    const onReadyToPlay = () => {
-      console.log('onReadyToPlay');
+
+    const onCanplay = () => {
       setFilmDuration(getDuration($video));
       onPlayButtonClick($video);
       setIsFilmPlaying(true);
     };
-    if (videoRef?.current) {
-      console.log('videoRef?.current', videoRef?.current);
-      $video = videoRef.current;
-      $video.addEventListener('canplay', onReadyToPlay);
-      // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
-      $video.addEventListener('playing', () => {
-        console.log('playing');
-      });
-      $video.addEventListener('waiting', () => {
-        console.log('waiting');
-      });
-      $video.addEventListener('stalled', () => {
-        console.log('stalled');
-      });
-      $video.addEventListener('staloadedmetadatalled', () => {
-        console.log('staloadedmetadatalled');
-      });
-      $video.addEventListener('suspend', () => {
-        console.log('suspend');
-      });
-      $video.addEventListener('progress', () => {
-        console.log('progress');
-      });
-      $video.addEventListener('emptied', () => {
-        console.log('emptied');
-      });
-    }
+
+    $video = videoRef.current;
+    $video.addEventListener('canplay', onCanplay);
+
     return () => {
       if ($video) {
-        $video.removeEventListener('canplay', onReadyToPlay);
+        $video.removeEventListener('canplay', onCanplay);
       }
     };
   });
@@ -143,7 +145,7 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
     return () => {
       clearInterval(progressBarTimerId.current);
     };
-  });
+  }, [setTimeElapsed, setTimeRemaining, filmDuration]);
 
   if (!isDataLoaded) {
     return <PlayerSpinner />;
@@ -189,7 +191,11 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
   );
 
   return (
-    <div ref={playerRef} className="player">
+    <div
+      ref={playerRef}
+      className="player"
+      onMouseMove={handleMouseMove}
+    >
 
       <video
         ref={videoRef}
@@ -198,9 +204,6 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
         width="100%"
         height="100%"
         muted={false}
-        // preload="auto"
-        // autoPlay
-        // controls
         onClick={() => {
           if (isFilmPlaying) {
             onPauseButtonClick(videoRef.current);
@@ -211,8 +214,8 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
           }
         }}
       >
-        {/* <source src={video} type="video/webm;codecs='vp8, vorbis'"></source>
-        <source src={video} type="video/mp4;codecs='avc1.4d002a'"></source> */}
+        <source src={video} type="video/webm;codecs='vp8, vorbis'"></source>
+        <source src={video} type="video/mp4;codecs='avc1.4d002a'"></source>
       </video>
 
       <Link
@@ -223,6 +226,7 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
       </Link>
 
       <div
+        ref={controlsRef}
         className="player__controls"
       >
         <div className="player__controls-row">
@@ -256,7 +260,6 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
             className="player__full-screen"
             type="button"
             onClick={() => {onFullScreenButtonClick(playerRef.current);}}
-            // onClick={() => {onFullScreenButtonClick(videoRef.current);}}
           >
             <svg viewBox="0 0 27 27" width="27" height="27">
               <use xlinkHref="#full-screen"></use>
