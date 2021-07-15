@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {postComment} from '../../store/api-actions';
-import {ActionCreator} from '../../store/action';
+import {nullifyNewCommentErrorCode} from '../../store/action';
 import ErrorMessage from '../error-message/error-message';
 
 
@@ -123,7 +123,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(postComment(filmId, newComment));
   },
   resetErrorCode() {
-    dispatch(ActionCreator.nullifyNewCommentErrorCode());
+    dispatch(nullifyNewCommentErrorCode());
   },
 });
 

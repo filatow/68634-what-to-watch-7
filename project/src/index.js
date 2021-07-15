@@ -7,14 +7,13 @@ import App from './components/app/app';
 import {reducer} from './store/reducer';
 import ReduxThunk from 'redux-thunk';
 import {createAPI} from './services/api';
-import {ActionCreator} from './store/action';
-// import {checkAuth, fetchFilmList} from './store/api-actions';
+import {requireAuthorization} from './store/action';
 import {checkAuth} from './store/api-actions';
 import {AuthorizationStatus} from './consts';
 import {redirect} from './store/middlewares/redirect';
 
 const api = createAPI(
-  () => store.dispatch(ActionCreator.requireAuthorization(AuthorizationStatus.NO_AUTH)),
+  () => store.dispatch(requireAuthorization(AuthorizationStatus.NO_AUTH)),
 );
 
 const store = createStore(
@@ -26,8 +25,6 @@ const store = createStore(
 );
 
 store.dispatch(checkAuth());
-// Перенести в Main
-// store.dispatch(fetchFilmList());
 
 ReactDOM.render(
   <React.StrictMode>

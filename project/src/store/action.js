@@ -16,63 +16,74 @@ export const ActionType = {
   REDIRECT_TO_ROUTE: 'redirect-to-route',
 };
 
-export const ActionCreator = {
-  setFilterCategory: (FilterCategory) => ({
-    type: ActionType.SET_FILTER_CATEGORY,
-    payload: FilterCategory,
-  }),
-  loadFilms: (films) => ({
-    type: ActionType.LOAD_FILMS,
-    payload: films,
-  }),
-  loadPromotedFilm: (film) => ({
-    type: ActionType.LOAD_PROMOTED_FILM,
-    payload: film,
-  }),
-  loadCurrentFilm: (film) => ({
-    type: ActionType.LOAD_CURRENT_FILM,
-    payload: film,
-  }),
-  loadSimilarFilms: (films) => ({
-    type: ActionType.LOAD_SIMILAR_FILMS,
-    payload: films,
-  }),
-  loadFavoriteFilms: (films) => ({
-    type: ActionType.LOAD_FAVORITE_FILMS,
-    payload: films,
-  }),
-  loadFilmComments: (comments) => ({
-    type: ActionType.LOAD_FILM_COMMENTS,
-    payload: comments,
-  }),
-  addNewComment: (comment) => ({
-    type: ActionType.ADD_NEW_COMMENT,
-    payload: comment,
-  }),
-  catchNewCommentError: (httpCode) => ({
-    type: ActionType.CATCH_NEW_COMMENT_ERROR,
-    payload: httpCode,
-  }),
-  nullifyNewCommentErrorCode: () => ({
-    type: ActionType.NULLIFY_NEW_COMMENT_ERROR_CODE,
-  }),
-  startLoading: (dataName) => ({
-    type: ActionType.START_LOADING,
-    payload: dataName,
-  }),
-  stopLoading: (dataName) => ({
-    type: ActionType.STOP_LOADING,
-    payload: dataName,
-  }),
-  requireAuthorization: (status) => ({
-    type: ActionType.REQUIRE_AUTHORIZATION,
-    payload: status,
-  }),
-  logout: () => ({
-    type: ActionType.LOGOUT,
-  }),
-  redirectToRoute: (url) => ({
-    type: ActionType.REDIRECT_TO_ROUTE,
-    payload: url,
-  }),
-};
+
+export const setFilterCategory = (FilterCategory) => ({
+  type: ActionType.SET_FILTER_CATEGORY,
+  payload: FilterCategory,
+});
+
+export const loadFilms = (films) => ({
+  type: ActionType.LOAD_FILMS,
+  payload: films,
+});
+export const loadPromotedFilm = (film) => ({
+  type: ActionType.LOAD_PROMOTED_FILM,
+  payload: film,
+});
+
+export const loadCurrentFilm = (film) => ({
+  type: ActionType.LOAD_CURRENT_FILM,
+  payload: film,
+});
+
+export const loadSimilarFilms = (films) => ({
+  type: ActionType.LOAD_SIMILAR_FILMS,
+  payload: films,
+});
+
+export const loadFavoriteFilms = (films) => ({
+  type: ActionType.LOAD_FAVORITE_FILMS,
+  payload: films,
+});
+export const loadFilmComments = (comments) => ({
+  type: ActionType.LOAD_FILM_COMMENTS,
+  payload: comments,
+});
+
+export const addNewComment = (comment) => ({
+  type: ActionType.ADD_NEW_COMMENT,
+  payload: comment,
+});
+
+export const catchNewCommentError = (httpCode) => ({
+  type: ActionType.CATCH_NEW_COMMENT_ERROR,
+  payload: httpCode,
+});
+
+export const nullifyNewCommentErrorCode = () => ({
+  type: ActionType.NULLIFY_NEW_COMMENT_ERROR_CODE,
+});
+
+export const startLoading = (dataName) => ({
+  type: ActionType.START_LOADING,
+  payload: dataName,
+});
+
+export const stopLoading = (dataName) => ({
+  type: ActionType.STOP_LOADING,
+  payload: dataName,
+});
+
+export const requireAuthorization = (status) => ({
+  type: ActionType.REQUIRE_AUTHORIZATION,
+  payload: status,
+});
+
+export const logout = () => ({
+  type: ActionType.LOGOUT,
+});
+
+export const redirectToRoute = (url) => ({
+  type: ActionType.REDIRECT_TO_ROUTE,
+  payload: url,
+});
