@@ -1,3 +1,5 @@
+import {createAction} from '@reduxjs/toolkit';
+
 export const ActionType = {
   SET_FILTER_CATEGORY: 'main/setFilterCategory',
   LOAD_FILMS: 'main/loadFilms',
@@ -16,74 +18,101 @@ export const ActionType = {
   REDIRECT_TO_ROUTE: 'middleware/redirectToRoute',
 };
 
+export const setFilterCategory = createAction(
+  ActionType.SET_FILTER_CATEGORY,
+  (filterCategory) => ({
+    payload: filterCategory,
+  }),
+);
 
-export const setFilterCategory = (FilterCategory) => ({
-  type: ActionType.SET_FILTER_CATEGORY,
-  payload: FilterCategory,
-});
+export const loadFilms = createAction(
+  ActionType.LOAD_FILMS,
+  (films) => ({
+    payload: films,
+  }),
+);
 
-export const loadFilms = (films) => ({
-  type: ActionType.LOAD_FILMS,
-  payload: films,
-});
-export const loadPromotedFilm = (film) => ({
-  type: ActionType.LOAD_PROMOTED_FILM,
-  payload: film,
-});
+export const loadPromotedFilm = createAction(
+  ActionType.LOAD_PROMOTED_FILM,
+  (film) => ({
+    payload: film,
+  }),
+);
 
-export const loadCurrentFilm = (film) => ({
-  type: ActionType.LOAD_CURRENT,
-  payload: film,
-});
+export const loadCurrentFilm = createAction(
+  ActionType.LOAD_CURRENT,
+  (film) => ({
+    payload: film,
+  }),
+);
 
-export const loadSimilarFilms = (films) => ({
-  type: ActionType.LOAD_SIMILAR,
-  payload: films,
-});
+export const loadSimilarFilms = createAction(
+  ActionType.LOAD_SIMILAR,
+  (films) => ({
+    payload: films,
+  }),
+);
 
-export const loadFavoriteFilms = (films) => ({
-  type: ActionType.LOAD_FAVORITE_FILMS,
-  payload: films,
-});
-export const loadFilmComments = (comments) => ({
-  type: ActionType.LOAD_COMMENTS,
-  payload: comments,
-});
+export const loadFavoriteFilms = createAction(
+  ActionType.LOAD_FAVORITE_FILMS,
+  (films) => ({
+    payload: films,
+  }),
+);
 
-export const addNewComment = (comment) => ({
-  type: ActionType.ADD_NEW_COMMENT,
-  payload: comment,
-});
+export const loadFilmComments = createAction(
+  ActionType.LOAD_COMMENTS,
+  (comments) => ({
+    payload: comments,
+  }),
+);
 
-export const catchNewCommentError = (httpCode) => ({
-  type: ActionType.CATCH_NEW_COMMENT_ERROR,
-  payload: httpCode,
-});
+export const addNewComment = createAction(
+  ActionType.ADD_NEW_COMMENT,
+  (comment) => ({
+    payload: comment,
+  }),
+);
 
-export const nullifyNewCommentErrorCode = () => ({
-  type: ActionType.NULLIFY_NEW_COMMENT_ERROR_CODE,
-});
+export const catchNewCommentError = createAction(
+  ActionType.CATCH_NEW_COMMENT_ERROR,
+  (httpCode) => ({
+    payload: httpCode,
+  }),
+);
 
-export const startLoading = (dataName) => ({
-  type: ActionType.START_LOADING,
-  payload: dataName,
-});
+export const nullifyNewCommentErrorCode = createAction(
+  ActionType.NULLIFY_NEW_COMMENT_ERROR_CODE,
+);
 
-export const stopLoading = (dataName) => ({
-  type: ActionType.STOP_LOADING,
-  payload: dataName,
-});
+export const startLoading = createAction(
+  ActionType.START_LOADING,
+  (dataName) => ({
+    payload: dataName,
+  }),
+);
 
-export const requireAuthorization = (status) => ({
-  type: ActionType.REQUIRE_AUTHORIZATION,
-  payload: status,
-});
+export const stopLoading = createAction(
+  ActionType.STOP_LOADING,
+  (dataName) => ({
+    payload: dataName,
+  }),
+);
 
-export const logout = () => ({
-  type: ActionType.LOGOUT,
-});
+export const requireAuthorization = createAction(
+  ActionType.REQUIRE_AUTHORIZATION,
+  (status) => ({
+    payload: status,
+  }),
+);
 
-export const redirectToRoute = (url) => ({
-  type: ActionType.REDIRECT_TO_ROUTE,
-  payload: url,
-});
+export const logout = createAction(
+  ActionType.LOGOUT,
+);
+
+export const redirectToRoute = createAction(
+  ActionType.REDIRECT_TO_ROUTE,
+  (url) => ({
+    payload: url,
+  }),
+);
