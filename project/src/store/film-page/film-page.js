@@ -1,4 +1,12 @@
-import {ActionType} from '../action';
+import {
+  addNewComment,
+  catchNewCommentError,
+  loadCurrentFilm,
+  loadFilmComments,
+  loadSimilarFilms,
+  nullifyNewCommentErrorCode
+} from '../action';
+import {createReducer} from '@reduxjs/toolkit';
 
 const initialState = {
   currentFilm: {},
@@ -7,42 +15,28 @@ const initialState = {
   newCommentErrorCode: null,
 };
 
+const filmPage = createReducer(initialState, (builder) => {
+  builder
+    .addCase(loadCurrentFilm, (state, action) => {
+      state.currentFilm = action.payload;
+    })
+    .addCase(loadSimilarFilms, (state, action) => {
+      state.similarFilms = action.payload;
+    })
+    .addCase(loadFilmComments, (state, action) => {
+      state.currentFilmComments = action.payload;
+    })
+    .addCase(addNewComment, (state, action) => {
+      state.currentFilmComments = action.payload;
+    })
+    .addCase(catchNewCommentError, (state, action) => {
+      state.newCommentErrorCode = action.payload;
+    })
+    .addCase(nullifyNewCommentErrorCode, (state) => {
+      state.newCommentErrorCode = null;
+    });
+});
 
-const filmPage = (state = initialState, action) => {
-  switch (action.type) {
-    case ActionType.LOAD_CURRENT:
-      return {
-        ...state,
-        currentFilm: action.payload,
-      };
-    case ActionType.LOAD_SIMILAR:
-      return {
-        ...state,
-        similarFilms: action.payload,
-      };
-    case ActionType.LOAD_COMMENTS:
-      return {
-        ...state,
-        currentFilmComments: action.payload,
-      };
-    case ActionType.ADD_NEW_COMMENT:
-      return {
-        ...state,
-        currentFilmComments: action.payload,
-      };
-    case ActionType.CATCH_NEW_COMMENT_ERROR:
-      return {
-        ...state,
-        newCommentErrorCode: action.payload,
-      };
-    case ActionType.NULLIFY_NEW_COMMENT_ERROR_CODE:
-      return {
-        ...state,
-        newCommentErrorCode: null,
-      };
-    default:
-      return state;
-  }
-};
 
 export {filmPage};
+

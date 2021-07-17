@@ -1,20 +1,16 @@
-import {ActionType} from '../action';
+import {createReducer} from '@reduxjs/toolkit';
+import { loadFavoriteFilms } from '../action';
+
 
 const initialState = {
   favoriteFilms: [],
 };
 
-
-const favoritePage = (state = initialState, action) => {
-  switch (action.type) {
-    case ActionType.LOAD_FAVORITE_FILMS:
-      return {
-        ...state,
-        favoriteFilms: action.payload,
-      };
-    default:
-      return state;
-  }
-};
+const favoritePage = createReducer(initialState, (builder) => {
+  builder
+    .addCase(loadFavoriteFilms, (state, action) => {
+      state.favoriteFilms = action.payload;
+    });
+});
 
 export {favoritePage};

@@ -1,4 +1,5 @@
-import {ActionType} from '../action';
+import {loadFilms, loadPromotedFilm, setFilterCategory} from '../action';
+import {createReducer} from '@reduxjs/toolkit';
 import {FilmCategory} from '../../consts';
 
 const initialState = {
@@ -8,30 +9,21 @@ const initialState = {
   filteredFilms: [],
 };
 
-const mainPage = (state = initialState, action) => {
-  switch (action.type) {
-    case ActionType.SET_FILTER_CATEGORY:
-      return {
-        ...state,
-        filterCategory: action.payload,
-        filteredFilms: (action.payload === FilmCategory.ALL_GENRES)
-          ? state.films
-          : state.films.filter((film) => film.genre === action.payload),
-      };
-    case ActionType.LOAD_FILMS:
-      return {
-        ...state,
-        films: action.payload,
-        filteredFilms: action.payload,
-      };
-    case ActionType.LOAD_PROMOTED_FILM:
-      return {
-        ...state,
-        promotedFilm: action.payload,
-      };
-    default:
-      return state;
-  }
-};
+const mainPage = createReducer(initialState, (builder) => {
+  builder
+    .addCase(loadFilms, (state, action) => {
+      state.films = action.payload;
+      state.filteredFilms = action.payload;
+    })
+    .addCase(setFilterCategory, (state, action) => {
+      state.filterCategory = action.payload;
+      state.filteredFilms = (action.payload === FilmCategory.ALL_GENRES)
+        ? state.films
+        : state.films.filter((film) => film.genre === action.payload);
+    })
+    .addCase(loadPromotedFilm, (state, action) => {
+      state.promotedFilm = action.payload;
+    });
+});
 
 export {mainPage};
