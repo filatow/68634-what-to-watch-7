@@ -21,6 +21,7 @@ import {
   getPromotedFilm as getPromoFilm
 } from '../../store/main-page/selectors';
 import { isMainPageDataLoading } from '../../store/loading/selectors';
+import { getIsAuthorized } from '../../store/user/selectors';
 
 const BUNCH_FILM_COUNT = 8;
 
@@ -31,6 +32,7 @@ function Main(props) {
     filteredFilms,
     promotedFilm,
     isDataLoading,
+    isAuthorized,
     togglePromotedFilmFavoriteStatus,
   } = props;
   const {
@@ -102,10 +104,10 @@ function Main(props) {
 
               <div className="film-card__buttons">
                 <PlayButton filmId={id} />
-                <MyListButton
-                  isInList={isFavorite}
-                  onClick={onMyListButtonClick}
-                />
+                {isAuthorized
+                  ? <MyListButton isInList={isFavorite} onClick={onMyListButtonClick}/>
+                  : '' }
+
               </div>
             </div>
           </div>
@@ -151,12 +153,14 @@ Main.propTypes = {
   ]).isRequired,
   isDataLoading: PropTypes.bool.isRequired,
   togglePromotedFilmFavoriteStatus: PropTypes.func.isRequired,
+  isAuthorized: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   filteredFilms: getFilteredFilms(state),
   promotedFilm: getPromoFilm(state),
   isDataLoading: isMainPageDataLoading(state),
+  isAuthorized: getIsAuthorized(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
