@@ -4,7 +4,7 @@ import filmProp from './film.prop';
 import FilmList from '../film-list/film-list';
 import FilmTabs from '../film-tabs/film-tabs';
 import {Link} from 'react-router-dom';
-import {AppRoute, LoadedData, AuthorizationStatus} from '../../consts';
+import {AppRoute} from '../../consts';
 import Spinner from '../spinner/spinner';
 import Page404 from '../page-404/page-404';
 import { connect } from 'react-redux';
@@ -17,6 +17,9 @@ import Header from '../header/header';
 import MyListButton from '../my-list-button/my-list-button';
 import ReviewButton from '../review-button/review-button';
 import PlayButton from '../play-button/play-button';
+import { getCurrentFilm, getSimilarFilms as getSimilars } from '../../store/film-page/selectors';
+import { getIsAuthorized } from '../../store/user/selectors';
+import { isFilmPageDataLoading } from '../../store/loading/selectors';
 
 function Film(props) {
   const {
@@ -24,7 +27,7 @@ function Film(props) {
     film,
     similarFilms,
     getFilm,
-    isDataLoaded,
+    isDataLoading,
     getSimilarFilms,
     isAuthorized,
     toggleFavoriteStatus,
@@ -35,7 +38,7 @@ function Film(props) {
     getSimilarFilms(filmId);
   }, [filmId, getFilm, getSimilarFilms]);
 
-  if (!isDataLoaded) {
+  if (isDataLoading) {
     return <Spinner />;
   }
 
@@ -136,19 +139,17 @@ Film.propTypes = {
   ]),
   getFilm: PropTypes.func.isRequired,
   getSimilarFilms: PropTypes.func.isRequired,
-  isDataLoaded: PropTypes.bool.isRequired,
+  isDataLoading: PropTypes.bool.isRequired,
   isAuthorized: PropTypes.bool.isRequired,
   similarFilms: PropTypes.arrayOf(filmProp).isRequired,
   toggleFavoriteStatus: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({USER, FILM, LOADING}) => ({
-  film: FILM.currentFilm,
-  similarFilms: FILM.similarFilms,
-  isDataLoaded: !(
-    LOADING.isLoading[LoadedData.CURRENT_FILM] || LOADING.isLoading[LoadedData.SIMILAR_FILMS]
-  ),
-  isAuthorized: USER.authorizationStatus === AuthorizationStatus.AUTH,
+const mapStateToProps = (state) => ({
+  film: getCurrentFilm(state),
+  similarFilms: getSimilars(state),
+  isDataLoading: isFilmPageDataLoading(state),
+  isAuthorized: getIsAuthorized(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

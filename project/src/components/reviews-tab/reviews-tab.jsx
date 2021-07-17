@@ -5,15 +5,16 @@ import Review from '../review/review';
 import Spinner from '../spinner/spinner';
 import {connect} from 'react-redux';
 import {fetchFilmComments} from '../../store/api-actions';
-import {LoadedData} from '../../consts';
+import { getCurrentFilmComments } from '../../store/film-page/selectors';
+import { isFilmCommentsLoading } from '../../store/loading/selectors';
 
-function ReviewsTab({filmId, isDataLoaded, comments, getFilmReviews}) {
+function ReviewsTab({filmId, isDataLoading, comments, getFilmReviews}) {
 
   useEffect(() => {
     getFilmReviews(filmId);
   }, [filmId, getFilmReviews]);
 
-  if (!isDataLoaded) {
+  if (isDataLoading) {
     return <Spinner />;
   }
 
@@ -40,12 +41,12 @@ ReviewsTab.propTypes = {
   filmId: PropTypes.number.isRequired,
   comments: PropTypes.arrayOf(reviewProp).isRequired,
   getFilmReviews: PropTypes.func.isRequired,
-  isDataLoaded: PropTypes.bool.isRequired,
+  isDataLoading: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = ({FILM, LOADING}) => ({
-  comments: FILM.currentFilmComments,
-  isDataLoaded: !LOADING.isLoading[LoadedData.FILM_COMMENTS],
+const mapStateToProps = (state) => ({
+  comments: getCurrentFilmComments(state),
+  isDataLoading: isFilmCommentsLoading(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

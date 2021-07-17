@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import filmProp from '../film/film.prop';
 import PropTypes from 'prop-types';
 import {fetchCurrentFilm} from '../../store/api-actions';
-import {AppRoute, LoadedData} from '../../consts';
+import {AppRoute} from '../../consts';
 import PlayerSpinner from '../player-spinner/player-spinner';
 import Page404 from '../page-404/page-404';
 import { Link } from 'react-router-dom';
-
+import { getCurrentFilm } from '../../store/film-page/selectors';
+import { isCurrentFilmLoading } from '../../store/loading/selectors';
 import './player.css';
 
 const getHour = (hour) => {
@@ -69,8 +70,10 @@ const getDuration = (video) => {
 
 const getPercentage = (part, whole) => (part / whole) * 100;
 
+const INACTIVE_CONTROLS_HIDING_TIMEOUT = 4000;
+const PROGRESSBAR_REFRESHING_INTERVAL = 1000;
 
-function Player({filmId, film, isDataLoaded, getFilm}) {
+function Player({filmId, film, isDataLoading, getFilm}) {
   useEffect(() => {
     getFilm(filmId);
   }, [filmId, getFilm]);
@@ -102,7 +105,7 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
     setControlsTimer(
       setTimeout(() => {
         controls.style.display = 'none';
-      }, 4000),
+      }, INACTIVE_CONTROLS_HIDING_TIMEOUT),
     );
   };
 
@@ -141,17 +144,17 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
       progressRef.current.value = currentTime;
       togglerRef.current.style.left =` ${getPercentage(currentTime, filmDuration)}%`;
       setTimeRemaining(formatPlayerTime(filmDuration - parseInt(currentTime, 10), '-'));
-    }, 1000);
+    }, PROGRESSBAR_REFRESHING_INTERVAL);
     return () => {
       clearInterval(progressBarTimerId.current);
     };
   }, [setTimeElapsed, setTimeRemaining, filmDuration]);
 
-  if (!isDataLoaded) {
+  if (isDataLoading) {
     return <PlayerSpinner />;
   }
 
-  if (isDataLoaded && !Object.keys(film).length) {
+  if (!isDataLoading && !Object.keys(film).length) {
     return <Page404 />;
   }
 
@@ -179,6 +182,7 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
       className="player__play"
       onClick={(evt) => {
         evt.preventDefault();
+
         onPlayButtonClick(videoRef.current);
         setIsFilmPlaying(true);
       }}
@@ -213,10 +217,7 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
             setIsFilmPlaying(true);
           }
         }}
-      >
-        <source src={video} type="video/webm;codecs='vp8, vorbis'"></source>
-        <source src={video} type="video/mp4;codecs='avc1.4d002a'"></source>
-      </video>
+      />
 
       <Link
         to={`${AppRoute.FILMS}/${filmId}`}
@@ -279,14 +280,12 @@ Player.propTypes = {
     filmProp,
     PropTypes.shape({}),
   ]),
-  isDataLoaded: PropTypes.bool.isRequired,
+  isDataLoading: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = ({FILM, LOADING}) => ({
-  film: FILM.currentFilm,
-  isDataLoaded: !(
-    LOADING.isLoading[LoadedData.CURRENT_FILM]
-  ),
+const mapStateToProps = (state) => ({
+  film: getCurrentFilm(state),
+  isDataLoading: isCurrentFilmLoading(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -5,17 +5,19 @@ import FilmList from '../film-list/film-list';
 import Header from '../header/header';
 import Spinner from '../spinner/spinner';
 import {Link} from 'react-router-dom';
-import {AppRoute, LoadedData} from '../../consts';
+import {AppRoute} from '../../consts';
 import {connect} from 'react-redux';
 import {fetchFavoriteFilms} from '../../store/api-actions';
+import { getFavoriteFilms as getFavorites } from '../../store/favorite-page/selectors';
+import { isFavoriteFilmsLoading } from '../../store/loading/selectors';
 
-function MyList({favoriteFilms, isDataLoaded, getFavoriteFilms}) {
+function MyList({favoriteFilms, isDataLoading, getFavoriteFilms}) {
 
   useEffect(() => {
     getFavoriteFilms();
   }, [getFavoriteFilms]);
 
-  if (!isDataLoaded) {
+  if (isDataLoading) {
     return <Spinner />;
   }
 
@@ -53,13 +55,13 @@ MyList.propTypes = {
     filmProp,
     PropTypes.array,
   ]).isRequired,
-  isDataLoaded: PropTypes.bool.isRequired,
+  isDataLoading: PropTypes.bool.isRequired,
   getFavoriteFilms: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({FAVORITE, LOADING}) => ({
-  favoriteFilms: FAVORITE.favoriteFilms,
-  isDataLoaded: !LOADING.isLoading[LoadedData.FAVORITE_FILMS],
+const mapStateToProps = (state) => ({
+  favoriteFilms: getFavorites(state),
+  isDataLoading: isFavoriteFilmsLoading(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import filmProp from '../film/film.prop';
 import {FilmCategory} from './../../consts';
 import {setFilterCategory} from '../../store/action';
+import { getFilms, getFilterCategory } from '../../store/main-page/selectors';
 
 function GenreList({films, filterCategory, onChangeCategory}) {
   const categories = [FilmCategory.ALL_GENRES, ...new Set(films.map((film) => film.genre))];
@@ -39,9 +40,9 @@ GenreList.propTypes = {
 };
 
 
-const mapStateToProps = ({MAIN}) => ({
-  filterCategory: MAIN.filterCategory,
-  films: MAIN.films,
+const mapStateToProps = (state) => ({
+  films: getFilms(state),
+  filterCategory: getFilterCategory(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

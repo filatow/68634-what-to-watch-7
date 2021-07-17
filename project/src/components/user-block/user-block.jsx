@@ -4,6 +4,7 @@ import {AppRoute, AuthorizationStatus} from '../../consts';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {logout} from '../../store/api-actions';
+import { getAuthorizationStatus } from '../../store/user/selectors';
 
 function UserBlock({authorizationStatus, signout}) {
   switch (authorizationStatus) {
@@ -49,8 +50,8 @@ UserBlock.propTypes = {
   signout: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({USER}) => ({
-  authorizationStatus: USER.authorizationStatus,
+const mapStateToProps = (state) => ({
+  authorizationStatus: getAuthorizationStatus(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

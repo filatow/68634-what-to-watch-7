@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
-import {AppRoute, LoadedData} from '../../consts';
+import {AppRoute} from '../../consts';
 import filmProp from '../film/film.prop';
 import FilmList from '../film-list/film-list';
 import GenreList from '../genre-list/genre-list';
@@ -16,6 +16,11 @@ import {
 import Header from '../header/header';
 import MyListButton from '../my-list-button/my-list-button';
 import PlayButton from '../play-button/play-button';
+import {
+  getFilteredFilms,
+  getPromotedFilm as getPromoFilm
+} from '../../store/main-page/selectors';
+import { isMainPageDataLoading } from '../../store/loading/selectors';
 
 const BUNCH_FILM_COUNT = 8;
 
@@ -25,7 +30,7 @@ function Main(props) {
     getPromotedFilm,
     filteredFilms,
     promotedFilm,
-    isDataLoaded,
+    isDataLoading,
     togglePromotedFilmFavoriteStatus,
   } = props;
   const {
@@ -57,7 +62,7 @@ function Main(props) {
     }
   }, [filteredFilms, filmsMustBeShownCount]);
 
-  if (!isDataLoaded) {
+  if (isDataLoading) {
     return <Spinner />;
   }
 
@@ -144,16 +149,14 @@ Main.propTypes = {
     filmProp,
     PropTypes.shape({}),
   ]).isRequired,
-  isDataLoaded: PropTypes.bool.isRequired,
+  isDataLoading: PropTypes.bool.isRequired,
   togglePromotedFilmFavoriteStatus: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({MAIN, LOADING}) => ({
-  filteredFilms: MAIN.filteredFilms,
-  promotedFilm: MAIN.promotedFilm,
-  isDataLoaded: !(
-    LOADING.isLoading[LoadedData.PROMOTED_FILM]|| LOADING.isLoading[LoadedData.FILMS]
-  ),
+const mapStateToProps = (state) => ({
+  filteredFilms: getFilteredFilms(state),
+  promotedFilm: getPromoFilm(state),
+  isDataLoading: isMainPageDataLoading(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

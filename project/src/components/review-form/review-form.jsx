@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import {postComment} from '../../store/api-actions';
 import {nullifyNewCommentErrorCode} from '../../store/action';
 import ErrorMessage from '../error-message/error-message';
+import { getNewCommentErrorCode } from '../../store/film-page/selectors';
 
 
 function ReviewForm({filmId, postUserComment, errorCode, resetErrorCode}) {
@@ -114,8 +115,8 @@ ReviewForm.propTypes = {
   resetErrorCode: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({FILM}) => ({
-  errorCode: FILM.newCommentErrorCode,
+const mapStateToProps = (state) => ({
+  errorCode: getNewCommentErrorCode(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
