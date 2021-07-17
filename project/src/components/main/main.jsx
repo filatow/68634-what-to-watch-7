@@ -1,9 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {AppRoute} from '../../consts';
-import filmProp from '../film/film.prop';
 import FilmList from '../film-list/film-list';
 import GenreList from '../genre-list/genre-list';
 import MoreButton from '../more-button/more-button';
@@ -25,16 +23,12 @@ import { getIsAuthorized } from '../../store/user/selectors';
 
 const BUNCH_FILM_COUNT = 8;
 
-function Main(props) {
-  const {
-    getFilms,
-    getPromotedFilm,
-    filteredFilms,
-    promotedFilm,
-    isDataLoading,
-    isAuthorized,
-    togglePromotedFilmFavoriteStatus,
-  } = props;
+function Main() {
+  const filteredFilms = useSelector(getFilteredFilms);
+  const promotedFilm = useSelector(getPromoFilm);
+  const isDataLoading = useSelector(isMainPageDataLoading);
+  const isAuthorized = useSelector(getIsAuthorized);
+
   const {
     id,
     isFavorite,
@@ -45,11 +39,16 @@ function Main(props) {
     poster,
   } = promotedFilm;
 
+  const dispatch = useDispatch();
+
+  const togglePromotedFilmFavoriteStatus = (promotedFilmId, favoriteStatus) => {
+    dispatch(setPromotedFilmFavoriteStatus(promotedFilmId, Number(favoriteStatus)));
+  };
 
   useEffect(() => {
-    getFilms();
-    getPromotedFilm();
-  }, [getFilms, getPromotedFilm]);
+    dispatch(fetchFilmList());
+    dispatch(fetchPromotedFilm());
+  }, [dispatch]);
 
   const [filmsMustBeShown, setFilmsMustBeShown] = useState([]);
   const [filmsMustBeShownCount, setFilmsMustBeShownCount] = useState(BUNCH_FILM_COUNT);
@@ -143,37 +142,4 @@ function Main(props) {
   );
 }
 
-Main.propTypes = {
-  getFilms: PropTypes.func.isRequired,
-  getPromotedFilm: PropTypes.func.isRequired,
-  filteredFilms: PropTypes.arrayOf(filmProp).isRequired,
-  promotedFilm: PropTypes.oneOfType([
-    filmProp,
-    PropTypes.shape({}),
-  ]).isRequired,
-  isDataLoading: PropTypes.bool.isRequired,
-  togglePromotedFilmFavoriteStatus: PropTypes.func.isRequired,
-  isAuthorized: PropTypes.bool.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  filteredFilms: getFilteredFilms(state),
-  promotedFilm: getPromoFilm(state),
-  isDataLoading: isMainPageDataLoading(state),
-  isAuthorized: getIsAuthorized(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  getFilms() {
-    dispatch(fetchFilmList());
-  },
-  getPromotedFilm() {
-    dispatch(fetchPromotedFilm());
-  },
-  togglePromotedFilmFavoriteStatus(filmId, isFavorite) {
-    dispatch(setPromotedFilmFavoriteStatus(filmId, Number(isFavorite)));
-  },
-});
-
-export {Main};
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default Main;

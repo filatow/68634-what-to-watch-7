@@ -1,13 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {postComment} from '../../store/api-actions';
 import {nullifyNewCommentErrorCode} from '../../store/action';
 import ErrorMessage from '../error-message/error-message';
 import { getNewCommentErrorCode } from '../../store/film-page/selectors';
 
 
-function ReviewForm({filmId, postUserComment, errorCode, resetErrorCode}) {
+function ReviewForm({filmId}) {
+  const errorCode = useSelector(getNewCommentErrorCode);
+
+  const dispatch = useDispatch();
+
   const [rating, setRating] = useState('');
   const [comment, setComment] = useState('');
   const [isReadyToSubmit, setIsReadyToSubmit] = useState(false);
@@ -21,8 +25,8 @@ function ReviewForm({filmId, postUserComment, errorCode, resetErrorCode}) {
   }
 
   useEffect(() => {
-    resetErrorCode();
-  }, [resetErrorCode]);
+    dispatch(nullifyNewCommentErrorCode());
+  }, [dispatch]);
 
   useEffect(() => {
     if ((comment.length >= 50) && (comment.length <= 400) && rating) {
@@ -40,7 +44,7 @@ function ReviewForm({filmId, postUserComment, errorCode, resetErrorCode}) {
     }
 
     setIsReadyToSubmit(false);
-    postUserComment(filmId, {rating, comment});
+    dispatch(postComment(filmId, {rating, comment}));
   }
 
 
@@ -110,23 +114,6 @@ function ReviewForm({filmId, postUserComment, errorCode, resetErrorCode}) {
 
 ReviewForm.propTypes = {
   filmId: PropTypes.number.isRequired,
-  postUserComment: PropTypes.func.isRequired,
-  errorCode: PropTypes.number,
-  resetErrorCode: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  errorCode: getNewCommentErrorCode(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  postUserComment(filmId, newComment) {
-    dispatch(postComment(filmId, newComment));
-  },
-  resetErrorCode() {
-    dispatch(nullifyNewCommentErrorCode());
-  },
-});
-
-export {ReviewForm};
-export default connect(mapStateToProps, mapDispatchToProps)(ReviewForm);
+export default ReviewForm;

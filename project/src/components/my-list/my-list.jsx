@@ -1,21 +1,23 @@
 import React, {useEffect} from 'react';
-import PropTypes from 'prop-types';
-import filmProp from '../film/film.prop';
 import FilmList from '../film-list/film-list';
 import Header from '../header/header';
 import Spinner from '../spinner/spinner';
 import {Link} from 'react-router-dom';
 import {AppRoute} from '../../consts';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {fetchFavoriteFilms} from '../../store/api-actions';
-import { getFavoriteFilms as getFavorites } from '../../store/favorite-page/selectors';
+import {getFavoriteFilms} from '../../store/favorite-page/selectors';
 import { isFavoriteFilmsLoading } from '../../store/loading/selectors';
 
-function MyList({favoriteFilms, isDataLoading, getFavoriteFilms}) {
+function MyList() {
+  const favoriteFilms = useSelector(getFavoriteFilms);
+  const isDataLoading = useSelector(isFavoriteFilmsLoading);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getFavoriteFilms();
-  }, [getFavoriteFilms]);
+    dispatch(fetchFavoriteFilms());
+  }, [dispatch]);
 
   if (isDataLoading) {
     return <Spinner />;
@@ -50,25 +52,4 @@ function MyList({favoriteFilms, isDataLoading, getFavoriteFilms}) {
   );
 }
 
-MyList.propTypes = {
-  favoriteFilms: PropTypes.oneOfType([
-    filmProp,
-    PropTypes.array,
-  ]).isRequired,
-  isDataLoading: PropTypes.bool.isRequired,
-  getFavoriteFilms: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  favoriteFilms: getFavorites(state),
-  isDataLoading: isFavoriteFilmsLoading(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  getFavoriteFilms() {
-    dispatch(fetchFavoriteFilms());
-  },
-});
-
-export {MyList};
-export default connect(mapStateToProps, mapDispatchToProps)(MyList);
+export default MyList;

@@ -1,6 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
+import {useSelector} from 'react-redux';
 import {Router, Switch, Route} from 'react-router-dom';
 import Main from '../main/main';
 import SignIn from '../sign-in/sign-in';
@@ -17,10 +16,8 @@ import PrivateRoute from '../private-route/private-route';
 import { getAuthorizationStatus } from '../../store/user/selectors';
 
 
-function App(props) {
-  const {
-    authorizationStatus,
-  } = props;
+function App() {
+  const authorizationStatus = useSelector(getAuthorizationStatus);
 
   if (isAuthChecking(authorizationStatus)) {
     return <Spinner />;
@@ -103,14 +100,4 @@ function App(props) {
     </Router>
   );
 }
-
-App.propTypes = {
-  authorizationStatus: PropTypes.string.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  authorizationStatus: getAuthorizationStatus(state),
-});
-
-export {App};
-export default connect(mapStateToProps, null)(App);
+export default App;

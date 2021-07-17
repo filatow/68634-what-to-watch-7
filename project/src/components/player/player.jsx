@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { connect } from 'react-redux';
-import filmProp from '../film/film.prop';
+import {useSelector, useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 import {fetchCurrentFilm} from '../../store/api-actions';
 import {AppRoute} from '../../consts';
@@ -73,10 +72,15 @@ const getPercentage = (part, whole) => (part / whole) * 100;
 const INACTIVE_CONTROLS_HIDING_TIMEOUT = 4000;
 const PROGRESSBAR_REFRESHING_INTERVAL = 1000;
 
-function Player({filmId, film, isDataLoading, getFilm}) {
+function Player({filmId}) {
+  const film = useSelector(getCurrentFilm);
+  const isDataLoading = useSelector(isCurrentFilmLoading);
+
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    getFilm(filmId);
-  }, [filmId, getFilm]);
+    dispatch(fetchCurrentFilm(filmId));
+  }, [filmId, dispatch]);
 
   const [isFilmPlaying, setIsFilmPlaying] = useState(false);
   const videoRef = useRef(null);
@@ -84,6 +88,7 @@ function Player({filmId, film, isDataLoading, getFilm}) {
   const progressRef = useRef(null);
   const togglerRef = useRef(null);
   const controlsRef = useRef(null);
+  const exitButtonRef = useRef(null);
   const [filmDuration, setFilmDuration] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState('00:00');
   const [timeElapsed, setTimeElapsed] = useState('00:00');
@@ -95,16 +100,19 @@ function Player({filmId, film, isDataLoading, getFilm}) {
     }
 
     const {current: controls} = controlsRef;
+    const {current: exitButton} = exitButtonRef;
 
     if (controlsTimer) {
       clearTimeout(controlsTimer);
     }
 
     controls.style.display = 'block';
+    exitButton.style.display = 'block';
 
     setControlsTimer(
       setTimeout(() => {
         controls.style.display = 'none';
+        exitButton.style.display = 'none';
       }, INACTIVE_CONTROLS_HIDING_TIMEOUT),
     );
   };
@@ -220,6 +228,7 @@ function Player({filmId, film, isDataLoading, getFilm}) {
       />
 
       <Link
+        ref={exitButtonRef}
         to={`${AppRoute.FILMS}/${filmId}`}
         className="btn player__exit"
       >
@@ -274,25 +283,7 @@ function Player({filmId, film, isDataLoading, getFilm}) {
 }
 
 Player.propTypes = {
-  getFilm: PropTypes.func.isRequired,
   filmId: PropTypes.string.isRequired,
-  film: PropTypes.oneOfType([
-    filmProp,
-    PropTypes.shape({}),
-  ]),
-  isDataLoading: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  film: getCurrentFilm(state),
-  isDataLoading: isCurrentFilmLoading(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  getFilm(id) {
-    dispatch(fetchCurrentFilm(id));
-  },
-});
-
-export {Player};
-export default connect(mapStateToProps, mapDispatchToProps)(Player);
+export default Player;

@@ -1,13 +1,12 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
-import filmProp from './film.prop';
 import FilmList from '../film-list/film-list';
 import FilmTabs from '../film-tabs/film-tabs';
 import {Link} from 'react-router-dom';
 import {AppRoute} from '../../consts';
 import Spinner from '../spinner/spinner';
 import Page404 from '../page-404/page-404';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   fetchCurrentFilm,
   fetchSimilarFilms,
@@ -17,26 +16,27 @@ import Header from '../header/header';
 import MyListButton from '../my-list-button/my-list-button';
 import ReviewButton from '../review-button/review-button';
 import PlayButton from '../play-button/play-button';
-import { getCurrentFilm, getSimilarFilms as getSimilars } from '../../store/film-page/selectors';
+import { getCurrentFilm, getSimilarFilms } from '../../store/film-page/selectors';
 import { getIsAuthorized } from '../../store/user/selectors';
 import { isFilmPageDataLoading } from '../../store/loading/selectors';
 
-function Film(props) {
-  const {
-    filmId,
-    film,
-    similarFilms,
-    getFilm,
-    isDataLoading,
-    getSimilarFilms,
-    isAuthorized,
-    toggleFavoriteStatus,
-  } = props;
+function Film({filmId}) {
+
+  const film = useSelector(getCurrentFilm);
+  const similarFilms = useSelector(getSimilarFilms);
+  const isDataLoading = useSelector(isFilmPageDataLoading);
+  const isAuthorized = useSelector(getIsAuthorized);
+
+  const dispatch = useDispatch();
+
+  const toggleFavoriteStatus = (currentFilmId, favoriteStatus) => {
+    dispatch(setFilmFavoriteStatus(currentFilmId, Number(favoriteStatus)));
+  };
 
   useEffect(() => {
-    getFilm(filmId);
-    getSimilarFilms(filmId);
-  }, [filmId, getFilm, getSimilarFilms]);
+    dispatch(fetchCurrentFilm(filmId));
+    dispatch(fetchSimilarFilms(filmId));
+  }, [filmId, dispatch]);
 
   if (isDataLoading) {
     return <Spinner />;
@@ -133,37 +133,5 @@ function Film(props) {
 
 Film.propTypes = {
   filmId: PropTypes.string.isRequired,
-  film: PropTypes.oneOfType([
-    filmProp,
-    PropTypes.shape({}),
-  ]),
-  getFilm: PropTypes.func.isRequired,
-  getSimilarFilms: PropTypes.func.isRequired,
-  isDataLoading: PropTypes.bool.isRequired,
-  isAuthorized: PropTypes.bool.isRequired,
-  similarFilms: PropTypes.arrayOf(filmProp).isRequired,
-  toggleFavoriteStatus: PropTypes.func.isRequired,
 };
-
-const mapStateToProps = (state) => ({
-  film: getCurrentFilm(state),
-  similarFilms: getSimilars(state),
-  isDataLoading: isFilmPageDataLoading(state),
-  isAuthorized: getIsAuthorized(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  getFilm(id) {
-    dispatch(fetchCurrentFilm(id));
-  },
-  getSimilarFilms(id) {
-    dispatch(fetchSimilarFilms(id));
-  },
-  toggleFavoriteStatus(filmId, isFavorite) {
-    dispatch(setFilmFavoriteStatus(filmId, Number(isFavorite)));
-  },
-});
-
-export {Film};
-export default connect(mapStateToProps, mapDispatchToProps)(Film);
-
+export default Film;
