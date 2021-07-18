@@ -1,12 +1,14 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { connect } from 'react-redux';
-import filmProp from '../film/film.prop';
+import {useSelector, useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 import {fetchCurrentFilm} from '../../store/api-actions';
-import {AppRoute, LoadedData} from '../../consts';
+import {AppRoute} from '../../consts';
 import PlayerSpinner from '../player-spinner/player-spinner';
 import Page404 from '../page-404/page-404';
 import { Link } from 'react-router-dom';
+import { getCurrentFilm } from '../../store/film-page/selectors';
+import { isCurrentFilmLoading } from '../../store/loading/selectors';
+import './player.css';
 
 const getHour = (hour) => {
   if (hour === 0) {
@@ -32,12 +34,12 @@ const getSecond = (second) => {
   return String(second);
 };
 
-const getPlayerTime = (duration) => {
+const formatPlayerTime = (duration, prefix = '') => {
   const hour = Math.floor(duration / 3600);
   const minute = Math.floor((duration - hour * 3600) / 60);
   const second = duration - hour * 3600 - minute * 60;
 
-  return `-${getHour(hour)}:${getMinute(minute)}:${getSecond(second)}`;
+  return `${prefix}${getHour(hour)}${hour ? ':' : ''}${getMinute(minute)}:${getSecond(second)}`;
 };
 
 const onPauseButtonClick = (video) => {
@@ -65,27 +67,102 @@ const getDuration = (video) => {
   return '0';
 };
 
+const getPercentage = (part, whole) => (part / whole) * 100;
 
-function Player({filmId, film, isDataLoaded, getFilm}) {
+const INACTIVE_CONTROLS_HIDING_TIMEOUT = 4000;
+const PROGRESSBAR_REFRESHING_INTERVAL = 1000;
+
+function Player({filmId}) {
+  const film = useSelector(getCurrentFilm);
+  const isDataLoading = useSelector(isCurrentFilmLoading);
+
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    getFilm(filmId);
-  }, [filmId, getFilm]);
+    dispatch(fetchCurrentFilm(filmId));
+  }, [filmId, dispatch]);
 
   const [isFilmPlaying, setIsFilmPlaying] = useState(false);
   const videoRef = useRef(null);
   const playerRef = useRef(null);
+  const progressRef = useRef(null);
+  const togglerRef = useRef(null);
+  const controlsRef = useRef(null);
+  const exitButtonRef = useRef(null);
   const [filmDuration, setFilmDuration] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState('00:00');
+  const [timeElapsed, setTimeElapsed] = useState('00:00');
+  const [controlsTimer, setControlsTimer] = useState(null);
+
+  const handleMouseMove = () => {
+    if (!controlsRef.current) {
+      return;
+    }
+
+    const {current: controls} = controlsRef;
+    const {current: exitButton} = exitButtonRef;
+
+    if (controlsTimer) {
+      clearTimeout(controlsTimer);
+    }
+
+    controls.style.display = 'block';
+    exitButton.style.display = 'block';
+
+    setControlsTimer(
+      setTimeout(() => {
+        controls.style.display = 'none';
+        exitButton.style.display = 'none';
+      }, INACTIVE_CONTROLS_HIDING_TIMEOUT),
+    );
+  };
 
   useEffect(() => {
-    if (videoRef?.current) {
-      videoRef.current.addEventListener('canplay', (evt) => {
-        setFilmDuration(getDuration(videoRef.current));
-        setIsFilmPlaying(true);
-      });
+    if (!videoRef.current) {
+      return;
     }
+
+    let $video = null;
+
+    const onCanplay = () => {
+      setFilmDuration(getDuration($video));
+      onPlayButtonClick($video);
+      setIsFilmPlaying(true);
+    };
+
+    $video = videoRef.current;
+    $video.addEventListener('canplay', onCanplay);
+
+    return () => {
+      if ($video) {
+        $video.removeEventListener('canplay', onCanplay);
+      }
+    };
   });
 
-  if (isDataLoaded && !Object.keys(film).length) {
+  const progressBarTimerId = useRef(null);
+
+  useEffect(() => {
+    progressBarTimerId.current = setInterval(() => {
+      if (!videoRef.current) {
+        return;
+      }
+      const currentTime = parseFloat(videoRef.current.currentTime).toFixed(2);
+      setTimeElapsed(currentTime);
+      progressRef.current.value = currentTime;
+      togglerRef.current.style.left =` ${getPercentage(currentTime, filmDuration)}%`;
+      setTimeRemaining(formatPlayerTime(filmDuration - parseInt(currentTime, 10), '-'));
+    }, PROGRESSBAR_REFRESHING_INTERVAL);
+    return () => {
+      clearInterval(progressBarTimerId.current);
+    };
+  }, [setTimeElapsed, setTimeRemaining, filmDuration]);
+
+  if (isDataLoading) {
+    return <PlayerSpinner />;
+  }
+
+  if (!isDataLoading && !Object.keys(film).length) {
     return <Page404 />;
   }
 
@@ -113,6 +190,7 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
       className="player__play"
       onClick={(evt) => {
         evt.preventDefault();
+
         onPlayButtonClick(videoRef.current);
         setIsFilmPlaying(true);
       }}
@@ -125,50 +203,60 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
   );
 
   return (
-    <div ref={playerRef} className="player">
+    <div
+      ref={playerRef}
+      className="player"
+      onMouseMove={handleMouseMove}
+    >
 
-      {isDataLoaded
-        ? (
-          <video
-            ref={videoRef}
-            className="player__video"
-            src={video}
-            width="100%"
-            height="100%"
-            muted={false}
-            preload='auto'
-            autoPlay
-            onClick={() => {
-              if (isFilmPlaying) {
-                onPauseButtonClick(videoRef.current);
-                setIsFilmPlaying(false);
-              } else {
-                onPlayButtonClick(videoRef.current);
-                setIsFilmPlaying(true);
-              }
-            }}
-          />
-        ) : <PlayerSpinner />}
+      <video
+        ref={videoRef}
+        className="player__video"
+        src={video}
+        width="100%"
+        height="100%"
+        muted={false}
+        onClick={() => {
+          if (isFilmPlaying) {
+            onPauseButtonClick(videoRef.current);
+            setIsFilmPlaying(false);
+          } else {
+            onPlayButtonClick(videoRef.current);
+            setIsFilmPlaying(true);
+          }
+        }}
+      />
 
       <Link
+        ref={exitButtonRef}
         to={`${AppRoute.FILMS}/${filmId}`}
         className="btn player__exit"
       >
         Exit
       </Link>
 
-      <div className="player__controls">
+      <div
+        ref={controlsRef}
+        className="player__controls"
+      >
         <div className="player__controls-row">
           <div className="player__time">
             <progress
+              ref={progressRef}
               className="player__progress"
-              value="30"
+              value="0"
               max={filmDuration}
             />
-            <div className="player__toggler" style={{left: '30%'}}>Toggler</div>
+            <div
+              ref={togglerRef}
+              className="player__toggler"
+              title={formatPlayerTime(parseInt(timeElapsed, 10))}
+            >
+              Toggler
+            </div>
           </div>
           <div className="player__time-value">
-            {getPlayerTime(filmDuration)}
+            {timeRemaining}
           </div>
         </div>
 
@@ -182,7 +270,6 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
             className="player__full-screen"
             type="button"
             onClick={() => {onFullScreenButtonClick(playerRef.current);}}
-            // onClick={() => {onFullScreenButtonClick(videoRef.current);}}
           >
             <svg viewBox="0 0 27 27" width="27" height="27">
               <use xlinkHref="#full-screen"></use>
@@ -196,27 +283,7 @@ function Player({filmId, film, isDataLoaded, getFilm}) {
 }
 
 Player.propTypes = {
-  getFilm: PropTypes.func.isRequired,
   filmId: PropTypes.string.isRequired,
-  film: PropTypes.oneOfType([
-    filmProp,
-    PropTypes.shape({}),
-  ]),
-  isDataLoaded: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  film: state.currentFilm,
-  isDataLoaded: !(
-    state.isLoading[LoadedData.CURRENT_FILM]
-  ),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  getFilm(id) {
-    dispatch(fetchCurrentFilm(id));
-  },
-});
-
-export {Player};
-export default connect(mapStateToProps, mapDispatchToProps)(Player);
+export default Player;

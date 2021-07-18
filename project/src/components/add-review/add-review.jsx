@@ -1,24 +1,30 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
-import filmProp from '../film/film.prop';
 import {Link} from 'react-router-dom';
-import {AppRoute, LoadedData} from '../../consts';
+import {AppRoute} from '../../consts';
 import ReviewForm from '../review-form/review-form';
 import UserBlock from '../user-block/user-block';
-import { connect } from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {fetchCurrentFilm} from '../../store/api-actions';
 import Page404 from '../page-404/page-404';
 import Spinner from '../spinner/spinner';
+import { getCurrentFilm } from '../../store/film-page/selectors';
+import { isCurrentFilmLoading } from '../../store/loading/selectors';
 
-function AddReview({filmId, currentFilm, getFilm, isDataLoaded}) {
+function AddReview({filmId}) {
+  const currentFilm = useSelector(getCurrentFilm);
+  const isDataLoading = useSelector(isCurrentFilmLoading);
+
+  const dispatch = useDispatch();
+
 
   useEffect(() => {
     if (currentFilm.id !== parseInt(filmId, 10)) {
-      getFilm(filmId);
+      dispatch(fetchCurrentFilm(filmId));
     }
-  }, [filmId, currentFilm, getFilm]);
+  }, [filmId, currentFilm, dispatch]);
 
-  if (!isDataLoaded) {
+  if (isDataLoading) {
     return <Spinner />;
   }
 
@@ -89,25 +95,6 @@ AddReview.propTypes = {
     PropTypes.string,
     PropTypes.number,
   ]),
-  currentFilm: PropTypes.oneOfType([
-    filmProp,
-    PropTypes.shape({}),
-  ]).isRequired,
-  isDataLoaded: PropTypes.bool.isRequired,
-  getFilm: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  currentFilm: state.currentFilm,
-  isDataLoaded: !state.isLoading[LoadedData.CURRENT_FILM],
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  getFilm(id) {
-    dispatch(fetchCurrentFilm(id));
-  },
-});
-
-
-export {AddReview};
-export default connect(mapStateToProps, mapDispatchToProps)(AddReview);
+export default AddReview;

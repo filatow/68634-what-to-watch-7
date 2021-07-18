@@ -1,11 +1,15 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus} from '../../consts';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {logout} from '../../store/api-actions';
+import { getAuthorizationStatus } from '../../store/user/selectors';
 
-function UserBlock({authorizationStatus, signout}) {
+function UserBlock() {
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+
+  const dispatch = useDispatch();
+
   switch (authorizationStatus) {
     case AuthorizationStatus.AUTH:
       return (
@@ -24,7 +28,7 @@ function UserBlock({authorizationStatus, signout}) {
               className="user-block__link"
               onClick={(evt) => {
                 evt.preventDefault();
-                signout();
+                dispatch(logout());
               }}
               to="/"
             >
@@ -44,21 +48,4 @@ function UserBlock({authorizationStatus, signout}) {
   }
 }
 
-UserBlock.propTypes = {
-  authorizationStatus: PropTypes.string.isRequired,
-  signout: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  authorizationStatus: state.authorizationStatus,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  signout() {
-    dispatch(logout());
-  },
-});
-
-export {UserBlock};
-export default connect(mapStateToProps, mapDispatchToProps)(UserBlock);
-
+export default UserBlock;

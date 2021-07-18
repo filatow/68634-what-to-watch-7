@@ -1,78 +1,118 @@
+import {createAction} from '@reduxjs/toolkit';
+
 export const ActionType = {
-  SET_FILTER_CATEGORY: 'set-filter-category',
-  LOAD_FILMS: 'load-films',
-  LOAD_PROMOTED_FILM: 'load-promoted-film',
-  LOAD_CURRENT_FILM: 'load-current-film',
-  LOAD_SIMILAR_FILMS: 'load-similar-films',
-  LOAD_FAVORITE_FILMS: 'load-favorite-films',
-  LOAD_FILM_COMMENTS: 'load-film-comments',
-  ADD_NEW_COMMENT: 'add-new-comment',
-  CATCH_NEW_COMMENT_ERROR: 'catch-new-comment-error',
-  NULLIFY_NEW_COMMENT_ERROR_CODE: 'nullify-new-comment-error-code',
-  START_LOADING: 'start-loading',
-  STOP_LOADING: 'stop-loading',
-  REQUIRE_AUTHORIZATION: 'require-authorization',
-  LOGOUT: 'logout',
-  REDIRECT_TO_ROUTE: 'redirect-to-route',
+  SET_FILTER_CATEGORY: 'main/setFilterCategory',
+  LOAD_FILMS: 'main/loadFilms',
+  LOAD_PROMOTED_FILM: 'main/loadPromotedFilm',
+  REQUIRE_AUTHORIZATION: 'user/requireAuthorization',
+  LOGOUT: 'user/logout',
+  LOAD_FAVORITE_FILMS: 'favorite/loadFavoriteFilms',
+  LOAD_CURRENT: 'film/loadCurrent',
+  LOAD_SIMILAR: 'film/loadSimilar',
+  LOAD_COMMENTS: 'film/loadComments',
+  ADD_NEW_COMMENT: 'film/addNewComment',
+  CATCH_NEW_COMMENT_ERROR: 'film/catchNewCommentError',
+  NULLIFY_NEW_COMMENT_ERROR_CODE: 'film/nullifyNewCommentErrorCode',
+  START_LOADING: 'loading/start',
+  STOP_LOADING: 'loading/stop',
+  REDIRECT_TO_ROUTE: 'middleware/redirectToRoute',
 };
 
-export const ActionCreator = {
-  setFilterCategory: (FilterCategory) => ({
-    type: ActionType.SET_FILTER_CATEGORY,
-    payload: FilterCategory,
+export const setFilterCategory = createAction(
+  ActionType.SET_FILTER_CATEGORY,
+  (filterCategory) => ({
+    payload: filterCategory,
   }),
-  loadFilms: (films) => ({
-    type: ActionType.LOAD_FILMS,
+);
+
+export const loadFilms = createAction(
+  ActionType.LOAD_FILMS,
+  (films) => ({
     payload: films,
   }),
-  loadPromotedFilm: (film) => ({
-    type: ActionType.LOAD_PROMOTED_FILM,
+);
+
+export const loadPromotedFilm = createAction(
+  ActionType.LOAD_PROMOTED_FILM,
+  (film) => ({
     payload: film,
   }),
-  loadCurrentFilm: (film) => ({
-    type: ActionType.LOAD_CURRENT_FILM,
+);
+
+export const loadCurrentFilm = createAction(
+  ActionType.LOAD_CURRENT,
+  (film) => ({
     payload: film,
   }),
-  loadSimilarFilms: (films) => ({
-    type: ActionType.LOAD_SIMILAR_FILMS,
+);
+
+export const loadSimilarFilms = createAction(
+  ActionType.LOAD_SIMILAR,
+  (films) => ({
     payload: films,
   }),
-  loadFavoriteFilms: (films) => ({
-    type: ActionType.LOAD_FAVORITE_FILMS,
+);
+
+export const loadFavoriteFilms = createAction(
+  ActionType.LOAD_FAVORITE_FILMS,
+  (films) => ({
     payload: films,
   }),
-  loadFilmComments: (comments) => ({
-    type: ActionType.LOAD_FILM_COMMENTS,
+);
+
+export const loadFilmComments = createAction(
+  ActionType.LOAD_COMMENTS,
+  (comments) => ({
     payload: comments,
   }),
-  addNewComment: (comment) => ({
-    type: ActionType.ADD_NEW_COMMENT,
+);
+
+export const addNewComment = createAction(
+  ActionType.ADD_NEW_COMMENT,
+  (comment) => ({
     payload: comment,
   }),
-  catchNewCommentError: (httpCode) => ({
-    type: ActionType.CATCH_NEW_COMMENT_ERROR,
+);
+
+export const catchNewCommentError = createAction(
+  ActionType.CATCH_NEW_COMMENT_ERROR,
+  (httpCode) => ({
     payload: httpCode,
   }),
-  nullifyNewCommentErrorCode: () => ({
-    type: ActionType.NULLIFY_NEW_COMMENT_ERROR_CODE,
-  }),
-  startLoading: (dataName) => ({
-    type: ActionType.START_LOADING,
+);
+
+export const nullifyNewCommentErrorCode = createAction(
+  ActionType.NULLIFY_NEW_COMMENT_ERROR_CODE,
+);
+
+export const startLoading = createAction(
+  ActionType.START_LOADING,
+  (dataName) => ({
     payload: dataName,
   }),
-  stopLoading: (dataName) => ({
-    type: ActionType.STOP_LOADING,
+);
+
+export const stopLoading = createAction(
+  ActionType.STOP_LOADING,
+  (dataName) => ({
     payload: dataName,
   }),
-  requireAuthorization: (status) => ({
-    type: ActionType.REQUIRE_AUTHORIZATION,
+);
+
+export const requireAuthorization = createAction(
+  ActionType.REQUIRE_AUTHORIZATION,
+  (status) => ({
     payload: status,
   }),
-  logout: () => ({
-    type: ActionType.LOGOUT,
-  }),
-  redirectToRoute: (url) => ({
-    type: ActionType.REDIRECT_TO_ROUTE,
+);
+
+export const logout = createAction(
+  ActionType.LOGOUT,
+);
+
+export const redirectToRoute = createAction(
+  ActionType.REDIRECT_TO_ROUTE,
+  (url) => ({
     payload: url,
   }),
-};
+);

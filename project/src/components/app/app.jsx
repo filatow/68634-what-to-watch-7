@@ -1,6 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
+import {useSelector} from 'react-redux';
 import {Router, Switch, Route} from 'react-router-dom';
 import Main from '../main/main';
 import SignIn from '../sign-in/sign-in';
@@ -14,15 +13,12 @@ import {AppRoute} from '../../consts';
 import {isAuthChecking} from '../../utils';
 import browserHistory from '../../browser-history';
 import PrivateRoute from '../private-route/private-route';
+import { getAuthorizationStatus } from '../../store/user/selectors';
 
 
-function App(props) {
-  const {
-    authorizationStatus,
-    // isDataLoaded,
-  } = props;
+function App() {
+  const authorizationStatus = useSelector(getAuthorizationStatus);
 
-  // if (isAuthChecking(authorizationStatus) || !isDataLoaded) {
   if (isAuthChecking(authorizationStatus)) {
     return <Spinner />;
   }
@@ -54,7 +50,7 @@ function App(props) {
           path={AppRoute.MYLIST}
           exact
           render={
-            ({history}) => <MyList />
+            () => <MyList />
           }
         >
         </PrivateRoute>
@@ -62,7 +58,7 @@ function App(props) {
           path={`${AppRoute.FILMS}/:id`}
           exact
           render={
-            ({history, match}) => (
+            ({match}) => (
               <Film
                 filmId={match.params.id}
               />
@@ -74,7 +70,7 @@ function App(props) {
           path={`${AppRoute.FILMS}/:id${AppRoute.REVIEW}`}
           exact
           render={
-            ({history, match}) => (
+            ({match}) => (
               <AddReview
                 filmId={match.params.id}
               />
@@ -86,7 +82,7 @@ function App(props) {
           path={`${AppRoute.PLAYER}/:id`}
           exact
           render={
-            ({history, match}) => (
+            ({match}) => (
               <Player
                 filmId={match.params.id}
               />
@@ -104,18 +100,4 @@ function App(props) {
     </Router>
   );
 }
-
-App.propTypes = {
-  authorizationStatus: PropTypes.string.isRequired,
-  // isDataLoaded: PropTypes.bool.isRequired,
-  // films: PropTypes.arrayOf(filmProp).isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  authorizationStatus: state.authorizationStatus,
-  // isDataLoaded: state.areFilmsLoaded,
-  // films: state.films,
-});
-
-export {App};
-export default connect(mapStateToProps, null)(App);
+export default App;

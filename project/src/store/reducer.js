@@ -8,23 +8,22 @@ const getLoadingObject = (source = {}) => Array.from(Object.values(source))
   }, {});
 
 const initialState = {
-  films: [],
-  promotedFilm: {},
-  currentFilm: {},
-  currentFilmComments: [],
-  similarFilms: [],
-  favoriteFilms: [],
+  films: [], /**/
+  promotedFilm: {}, /**/
+  currentFilm: {}, /**/
+  currentFilmComments: [], /**/
+  similarFilms: [], /**/
+  favoriteFilms: [], /**/
   isLoading: getLoadingObject(LoadedData),
-  filterCategory: FilmCategory.ALL_GENRES,
-  filteredFilms: [],
-  authorizationStatus: AuthorizationStatus.UNKNOWN,
-  // areFilmsLoaded: false,
-  newCommentErrorCode: null,
+  filterCategory: FilmCategory.ALL_GENRES, /**/
+  filteredFilms: [], /**/
+  authorizationStatus: AuthorizationStatus.UNKNOWN, /**/
+  newCommentErrorCode: null, /**/
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case ActionType.SET_FILTER_CATEGORY:
+    case ActionType.SET_FILTER_CATEGORY: /** */
       return {
         ...state,
         filterCategory: action.payload,
@@ -32,48 +31,48 @@ const reducer = (state = initialState, action) => {
           ? state.films
           : state.films.filter((film) => film.genre === action.payload),
       };
-    case ActionType.LOAD_FILMS:
+    case ActionType.LOAD_FILMS: /** */
       return {
         ...state,
         films: action.payload,
         filteredFilms: action.payload,
       };
-    case ActionType.LOAD_PROMOTED_FILM:
+    case ActionType.LOAD_PROMOTED_FILM: /** */
       return {
         ...state,
         promotedFilm: action.payload,
       };
-    case ActionType.LOAD_CURRENT_FILM:
+    case ActionType.LOAD_CURRENT: /** */
       return {
         ...state,
         currentFilm: action.payload,
       };
-    case ActionType.LOAD_FAVORITE_FILMS:
+    case ActionType.LOAD_FAVORITE_FILMS: /** */
       return {
         ...state,
         favoriteFilms: action.payload,
       };
-    case ActionType.LOAD_FILM_COMMENTS:
+    case ActionType.LOAD_COMMENTS: /** */
       return {
         ...state,
         currentFilmComments: action.payload,
       };
-    case ActionType.ADD_NEW_COMMENT:
+    case ActionType.ADD_NEW_COMMENT: /** */
       return {
         ...state,
         currentFilmComments: action.payload,
       };
-    case ActionType.NULLIFY_NEW_COMMENT_ERROR_CODE:
+    case ActionType.NULLIFY_NEW_COMMENT_ERROR_CODE: /** */
       return {
         ...state,
-        currentFilmComments: null,
+        newCommentErrorCode: null,
       };
-    case ActionType.CATCH_NEW_COMMENT_ERROR:
+    case ActionType.CATCH_NEW_COMMENT_ERROR: /** */
       return {
         ...state,
         newCommentErrorCode: action.payload,
       };
-    case ActionType.LOAD_SIMILAR_FILMS:
+    case ActionType.LOAD_SIMILAR: /** */
       return {
         ...state,
         similarFilms: action.payload,
@@ -94,12 +93,12 @@ const reducer = (state = initialState, action) => {
           [action.payload]: false,
         },
       };
-    case ActionType.REQUIRE_AUTHORIZATION:
+    case ActionType.REQUIRE_AUTHORIZATION: /** */
       return {
         ...state,
         authorizationStatus: action.payload,
       };
-    case ActionType.LOGOUT:
+    case ActionType.LOGOUT: /** */
       return {
         ...state,
         authorizationStatus: AuthorizationStatus.NO_AUTH,

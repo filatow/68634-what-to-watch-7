@@ -1,14 +1,20 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
-import filmProp from '../film/film.prop';
+import {useSelector, useDispatch} from 'react-redux';
 import {FilmCategory} from './../../consts';
-import {ActionCreator} from '../../store/action';
+import {setFilterCategory} from '../../store/action';
+import { getFilms, getFilterCategory } from '../../store/main-page/selectors';
 
-function GenreList({films, filterCategory, onChangeCategory}) {
+const MAX_GENRES_COUNT = 10;
+
+function GenreList() {
+  const films = useSelector(getFilms);
+  const filterCategory = useSelector(getFilterCategory);
+
+  const dispatch = useDispatch();
+
   const categories = [FilmCategory.ALL_GENRES, ...new Set(films.map((film) => film.genre))];
 
-  const $categories = categories.map((caterogy) => {
+  const $categories = categories.slice(0, MAX_GENRES_COUNT).map((caterogy) => {
     const activeClass = filterCategory === caterogy ? 'catalog__genres-item--active' : '';
     return (
       <li className={`catalog__genres-item ${activeClass}`} key={caterogy}>
@@ -17,7 +23,7 @@ function GenreList({films, filterCategory, onChangeCategory}) {
           className="catalog__genres-link"
           onClick={(evt) => {
             evt.preventDefault();
-            onChangeCategory(caterogy);
+            dispatch(setFilterCategory(caterogy));
           }}
         >
           {caterogy}
@@ -32,24 +38,4 @@ function GenreList({films, filterCategory, onChangeCategory}) {
   );
 }
 
-GenreList.propTypes = {
-  filterCategory: PropTypes.string.isRequired,
-  films: PropTypes.arrayOf(filmProp).isRequired,
-  onChangeCategory: PropTypes.func.isRequired,
-};
-
-
-const mapStateToProps = (state) => ({
-  filterCategory: state.filterCategory,
-  films: state.films,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onChangeCategory(FilterCategory) {
-    dispatch(ActionCreator.setFilterCategory(FilterCategory));
-  },
-});
-
-
-export {GenreList};
-export default connect(mapStateToProps, mapDispatchToProps)(GenreList);
+export default GenreList;
