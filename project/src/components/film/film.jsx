@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom';
 import {AppRoute} from '../../consts';
 import Spinner from '../spinner/spinner';
 import Page404 from '../page-404/page-404';
-import { useSelector, useDispatch } from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {
   fetchCurrentFilm,
   fetchSimilarFilms,
@@ -16,9 +16,9 @@ import Header from '../header/header';
 import MyListButton from '../my-list-button/my-list-button';
 import ReviewButton from '../review-button/review-button';
 import PlayButton from '../play-button/play-button';
-import { getCurrentFilm, getSimilarFilms } from '../../store/film-page/selectors';
-import { getIsAuthorized } from '../../store/user/selectors';
-import { isFilmPageDataLoading } from '../../store/loading/selectors';
+import {getCurrentFilm, getSimilarFilms} from '../../store/film-page/selectors';
+import {getIsAuthorized} from '../../store/user/selectors';
+import {isFilmPageDataLoading} from '../../store/loading/selectors';
 
 function Film({filmId}) {
 

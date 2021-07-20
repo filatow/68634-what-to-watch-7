@@ -13,7 +13,7 @@ import {AppRoute} from '../../consts';
 import {isAuthChecking} from '../../utils';
 import browserHistory from '../../browser-history';
 import PrivateRoute from '../private-route/private-route';
-import { getAuthorizationStatus } from '../../store/user/selectors';
+import {getAuthorizationStatus} from '../../store/user/selectors';
 
 
 function App() {
@@ -31,7 +31,7 @@ function App() {
           path={AppRoute.MAIN}
           exact
           render={
-            ({history}) => (
+            () => (
               <Main />
             )
           }
@@ -41,7 +41,7 @@ function App() {
           path={AppRoute.LOGIN}
           exact
           render={
-            ({history}) => (
+            () => (
               <SignIn />
             )
           }

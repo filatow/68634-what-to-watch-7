@@ -26,7 +26,6 @@ function DetailsTab({film}) {
   });
   const filmDuration = formatedFilmDuration(duration);
 
-
   return (
     <div className="film-card__text film-card__row">
       <div className="film-card__text-col">

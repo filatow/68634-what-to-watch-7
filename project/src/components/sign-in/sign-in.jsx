@@ -11,7 +11,7 @@ function SignIn() {
   const loginRef = useRef();
   const passwordRef = useRef();
 
-  const handleSubmit = (evt) => {
+  const onSignInFormSubmit = (evt) => {
     evt.preventDefault();
 
     dispatch(login({
@@ -38,7 +38,7 @@ function SignIn() {
         <form
           action="#"
           className="sign-in__form"
-          onSubmit={handleSubmit}
+          onSubmit={onSignInFormSubmit}
         >
           <div className="sign-in__fields">
             <div className="sign-in__field">

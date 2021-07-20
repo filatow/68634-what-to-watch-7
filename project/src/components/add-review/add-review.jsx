@@ -8,15 +8,14 @@ import {useSelector, useDispatch} from 'react-redux';
 import {fetchCurrentFilm} from '../../store/api-actions';
 import Page404 from '../page-404/page-404';
 import Spinner from '../spinner/spinner';
-import { getCurrentFilm } from '../../store/film-page/selectors';
-import { isCurrentFilmLoading } from '../../store/loading/selectors';
+import {getCurrentFilm} from '../../store/film-page/selectors';
+import {isCurrentFilmLoading} from '../../store/loading/selectors';
 
 function AddReview({filmId}) {
   const currentFilm = useSelector(getCurrentFilm);
   const isDataLoading = useSelector(isCurrentFilmLoading);
 
   const dispatch = useDispatch();
-
 
   useEffect(() => {
     if (currentFilm.id !== parseInt(filmId, 10)) {

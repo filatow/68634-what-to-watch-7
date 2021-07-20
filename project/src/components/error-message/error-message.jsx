@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './error-message.css';
 import {HttpCode} from '../../consts';
+import './error-message.css';
 
 function errorMessageText(errorCode) {
   switch (errorCode) {

@@ -18,8 +18,8 @@ import {
   getFilteredFilms,
   getPromotedFilm as getPromoFilm
 } from '../../store/main-page/selectors';
-import { isMainPageDataLoading } from '../../store/loading/selectors';
-import { getIsAuthorized } from '../../store/user/selectors';
+import {isMainPageDataLoading} from '../../store/loading/selectors';
+import {getIsAuthorized} from '../../store/user/selectors';
 
 const BUNCH_FILM_COUNT = 8;
 

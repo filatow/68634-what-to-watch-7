@@ -5,7 +5,6 @@ import {AppRoute} from '../../consts';
 import UserBlock from '../user-block/user-block';
 
 function Header({children}) {
-  // console.log(typeof children);
   return (
 
     <header className="page-header user-page__head">

@@ -5,9 +5,9 @@ import {fetchCurrentFilm} from '../../store/api-actions';
 import {AppRoute} from '../../consts';
 import PlayerSpinner from '../player-spinner/player-spinner';
 import Page404 from '../page-404/page-404';
-import { Link } from 'react-router-dom';
-import { getCurrentFilm } from '../../store/film-page/selectors';
-import { isCurrentFilmLoading } from '../../store/loading/selectors';
+import {Link} from 'react-router-dom';
+import {getCurrentFilm} from '../../store/film-page/selectors';
+import {isCurrentFilmLoading} from '../../store/loading/selectors';
 import './player.css';
 
 const getHour = (hour) => {
@@ -43,7 +43,7 @@ const formatPlayerTime = (duration, prefix = '') => {
 };
 
 const onPauseButtonClick = (video) => {
-  video?.pause();
+  video.pause();
 };
 
 const onPlayButtonClick = (video) => video.play();
@@ -92,7 +92,7 @@ function Player({filmId}) {
   const [timeElapsed, setTimeElapsed] = useState('00:00');
   const [controlsTimer, setControlsTimer] = useState(null);
 
-  const handleMouseMove = () => {
+  const onMouseMove = () => {
     if (!controlsRef.current) {
       return;
     }
@@ -204,7 +204,7 @@ function Player({filmId}) {
     <div
       ref={playerRef}
       className="player"
-      onMouseMove={handleMouseMove}
+      onMouseMove={onMouseMove}
     >
 
       <video
