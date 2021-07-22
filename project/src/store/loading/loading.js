@@ -1,12 +1,7 @@
 import {startLoading, stopLoading} from '../action';
 import {LoadedData} from '../../consts';
 import {createReducer} from '@reduxjs/toolkit';
-
-const getLoadingObject = (source = {}) => Array.from(Object.values(source))
-  .reduce((accum, value) => {
-    accum[value] = false;
-    return accum;
-  }, {});
+import {getLoadingObject} from '../../utils';
 
 const initialState = {
   isLoading: getLoadingObject(LoadedData),

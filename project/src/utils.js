@@ -29,3 +29,12 @@ export const adaptFilmToClient = (film) => {
 
   return adaptedFilm;
 };
+
+export const getLoadingObject = (
+  source = {},
+  defaultValue = false,
+) => Array.from(Object.values(source))
+  .reduce((accum, value) => {
+    accum[value] = defaultValue;
+    return accum;
+  }, {});
