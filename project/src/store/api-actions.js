@@ -77,6 +77,7 @@ export const checkAuth = () => (dispatch, _getState, api) =>
 export const login = ({login: email, password}) => (dispatch, _getState, api) =>
   api.post(APIRoute.LOGIN, {email, password})
     .then(({data}) => localStorage.setItem('token', data.token))
+    .then(() => api.defaults.headers['x-token'] = localStorage.getItem('token'))
     .then(() => dispatch(requireAuthorization(AuthorizationStatus.AUTH)))
     .then(() => dispatch(redirectToRoute(AppRoute.MAIN)));
 
@@ -95,6 +96,7 @@ export const setFilmFavoriteStatus = (filmId, statusId) => (dispatch, _getState,
   dispatch(startLoading(LoadedData.CURRENT_FILM));
   return api.post(`${APIRoute.FAVORITE}/${filmId}/${statusId}`)
     .then(({data}) => dispatch(loadCurrentFilm(adaptFilmToClient(data))))
+    .catch(() => {})
     .finally(() => dispatch(stopLoading(LoadedData.CURRENT_FILM)));
 };
 
@@ -102,5 +104,6 @@ export const setPromotedFilmFavoriteStatus = (filmId, statusId) => (dispatch, _g
   dispatch(startLoading(LoadedData.PROMOTED_FILM));
   return api.post(`${APIRoute.FAVORITE}/${filmId}/${statusId}`)
     .then(({data}) => dispatch(loadPromotedFilm(adaptFilmToClient(data))))
+    .catch(() => {})
     .finally(() => dispatch(stopLoading(LoadedData.PROMOTED_FILM)));
 };
