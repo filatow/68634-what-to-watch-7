@@ -31,7 +31,7 @@ function SignIn() {
           </Link>
         </div>
 
-        <h1 className="page-title user-page__title">Sign in</h1>
+        <h1 className="page-title user-page__title" data-testid="page-title">Sign in</h1>
       </header>
 
       <div className="sign-in user-page__content">
@@ -49,6 +49,7 @@ function SignIn() {
                 placeholder="Email address"
                 name="user-email"
                 id="user-email"
+                data-testid="user-email"
               />
               <label className="sign-in__label visually-hidden" htmlFor="user-email">Email address</label>
             </div>
@@ -60,6 +61,7 @@ function SignIn() {
                 placeholder="Password"
                 name="user-password"
                 id="user-password"
+                data-testid="user-password"
               />
               <label className="sign-in__label visually-hidden" htmlFor="user-password">Password</label>
             </div>

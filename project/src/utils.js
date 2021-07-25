@@ -1,4 +1,5 @@
 import {AuthorizationStatus} from './consts';
+import React from 'react';
 
 export const isAuthChecking = (authorizationStatus) =>
   authorizationStatus === AuthorizationStatus.UNKNOWN;
@@ -38,3 +39,20 @@ export const getLoadingObject = (
     accum[value] = defaultValue;
     return accum;
   }, {});
+
+
+export const getFormatedFilmDuration = (duration) => {
+  const hour = Math.floor(duration / 60);
+  const minute = duration - hour * 60;
+  return `${hour}h ${minute}m`;
+};
+
+export const getFormatedFilmStarring = (starring) => starring.map((star, ind) => {
+  if (ind !== starring.length - 1) {
+    return (
+      <React.Fragment key={star}>
+        {star}, <br />
+      </React.Fragment>);
+  }
+  return star;
+});
