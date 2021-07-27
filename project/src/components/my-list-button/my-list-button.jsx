@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 function MyListButton({isInList, onClick}) {
   const $icon = isInList
     ? (
-      <svg viewBox="0 0 18 14" width="18" height="14">
+      <svg viewBox="0 0 18 14" width="18" height="14" data-testid="in-list-icon">
         <use xlinkHref="#in-list"></use>
       </svg>
     )
     : (
-      <svg viewBox="0 0 19 20" width="19" height="20">
+      <svg viewBox="0 0 19 20" width="19" height="20" data-testid="add-icon">
         <use xlinkHref="#add"></use>
       </svg>
     );

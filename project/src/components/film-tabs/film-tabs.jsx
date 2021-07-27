@@ -9,7 +9,7 @@ const TAB_NAMES = ['Overview', 'Details', 'Reviews'];
 
 function FilmTabs({film}) {
   const [activeTab, setActiveTab] = useState(TAB_NAMES[0]);
-  const $tabs = TAB_NAMES.map((tabName, ind) => (
+  const $tabs = TAB_NAMES.map((tabName) => (
     <li
       className={`film-nav__item ${tabName === activeTab ? 'film-nav__item--active' : ''}`}
       key={tabName}

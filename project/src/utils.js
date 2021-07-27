@@ -56,3 +56,21 @@ export const getFormatedFilmStarring = (starring) => starring.map((star, ind) =>
   }
   return star;
 });
+
+export const determineRatingGrage = function(numericRating) {
+  if (numericRating === 10) {
+    return 'Awesome';
+  } else if (numericRating >= 8) {
+    return 'Very good';
+  } else if (numericRating >= 5) {
+    return 'Good';
+  } else if (numericRating >= 3) {
+    return 'Normal';
+  } else {
+    return 'Bad';
+  }
+};
+
+export const getFormatedReviewDate = (date) => new Date(date).toLocaleDateString(
+  'en-US',
+  { month: 'long', day: 'numeric', year: 'numeric'});

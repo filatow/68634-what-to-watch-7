@@ -1,19 +1,6 @@
 import React from 'react';
 import filmProp from '../film/film.prop';
-
-const determineGrage = function(numericRating) {
-  if (numericRating === 10) {
-    return 'Awesome';
-  } else if (numericRating >= 8) {
-    return 'Very good';
-  } else if (numericRating >= 5) {
-    return 'Good';
-  } else if (numericRating >= 3) {
-    return 'Normal';
-  } else {
-    return 'Bad';
-  }
-};
+import {determineRatingGrage} from '../../utils';
 
 function OverviewTab({film}) {
   const {
@@ -24,7 +11,7 @@ function OverviewTab({film}) {
     starring,
   } = film;
 
-  const voteGrade = determineGrage(rating);
+  const voteGrade = determineRatingGrage(rating);
   const filmStarring = starring.join(', ');
 
   return (
