@@ -84,7 +84,7 @@ function Main() {
           <img src={backgroundImage} alt="The Grand Budapest Hotel" />
         </div>
 
-        <h1 className="visually-hidden">WTW</h1>
+        <h1 className="visually-hidden" data-testid="heading">WTW</h1>
 
         <Header />
 
