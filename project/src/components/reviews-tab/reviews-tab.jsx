@@ -17,9 +17,11 @@ function ReviewsTab({filmId}) {
     dispatch(fetchFilmComments(filmId));
   }, [filmId, dispatch]);
 
-  if (isDataLoading) {
-    return <Spinner />;
-  }
+  useEffect(() => {
+    if (isDataLoading) {
+      return <Spinner />;
+    }
+  }, [isDataLoading]);
 
   const $comments = comments.map((review) => (
     <Review

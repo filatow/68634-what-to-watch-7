@@ -17,15 +17,13 @@ import MyListButton from '../my-list-button/my-list-button';
 import ReviewButton from '../review-button/review-button';
 import PlayButton from '../play-button/play-button';
 import {getCurrentFilm, getSimilarFilms} from '../../store/film-page/selectors';
-import {getIsAuthorized} from '../../store/user/selectors';
 import {isFilmPageDataLoading} from '../../store/loading/selectors';
 
 function Film({filmId}) {
 
   const film = useSelector(getCurrentFilm);
-  const similarFilms = useSelector(getSimilarFilms);
+  const similarFilms = useSelector(getSimilarFilms).filter((sim) => sim.id !== film.id);
   const isDataLoading = useSelector(isFilmPageDataLoading);
-  const isAuthorized = useSelector(getIsAuthorized);
 
   const dispatch = useDispatch();
 
@@ -38,11 +36,11 @@ function Film({filmId}) {
     dispatch(fetchSimilarFilms(filmId));
   }, [filmId, dispatch]);
 
-  if (isDataLoading) {
-    return <Spinner />;
-  }
-
   if (!Object.keys(film).length) {
+    if (isDataLoading) {
+      return <Spinner />;
+    }
+
     return <Page404 />;
   }
 
@@ -80,10 +78,8 @@ function Film({filmId}) {
 
               <div className="film-card__buttons">
                 <PlayButton filmId={id} />
-                {isAuthorized
-                  ? <MyListButton isInList={isFavorite} onClick={onMyListButtonClick} />
-                  : ''}
-                {isAuthorized ? <ReviewButton filmId={id} /> : ''}
+                <MyListButton isInList={isFavorite} onClick={onMyListButtonClick} />
+                <ReviewButton filmId={id} />
               </div>
             </div>
           </div>
