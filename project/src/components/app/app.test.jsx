@@ -93,7 +93,7 @@ describe('Application Routing', () => {
     );
   });
 
-  it('should render "Main" when user navigate to "/"', () => {
+  it.skip('should render "Main" when user navigate to "/"', () => {
     history.push(AppRoute.MAIN);
     render(fakeApp);
 
