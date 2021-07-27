@@ -9,6 +9,9 @@ import {checkAuth} from './store/api-actions';
 import {AuthorizationStatus} from './consts';
 import {redirect} from './store/middlewares/redirect';
 import rootReducer from './store/root-reducer';
+import {Router} from 'react-router-dom';
+import browserHistory from './browser-history';
+
 
 const api = createAPI(
   () => store.dispatch(requireAuthorization(AuthorizationStatus.NO_AUTH)),
@@ -30,7 +33,9 @@ store.dispatch(checkAuth());
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <Router history={browserHistory}>
+        <App />
+      </Router>
     </Provider>
   </React.StrictMode>,
   document.querySelector('#root'));

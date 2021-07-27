@@ -5,9 +5,9 @@ import {fetchCurrentFilm} from '../../store/api-actions';
 import {AppRoute} from '../../consts';
 import PlayerSpinner from '../player-spinner/player-spinner';
 import Page404 from '../page-404/page-404';
-import { Link } from 'react-router-dom';
-import { getCurrentFilm } from '../../store/film-page/selectors';
-import { isCurrentFilmLoading } from '../../store/loading/selectors';
+import {Link} from 'react-router-dom';
+import {getCurrentFilm} from '../../store/film-page/selectors';
+import {isCurrentFilmLoading} from '../../store/loading/selectors';
 import './player.css';
 
 const getHour = (hour) => {
@@ -43,12 +43,10 @@ const formatPlayerTime = (duration, prefix = '') => {
 };
 
 const onPauseButtonClick = (video) => {
-  video?.pause();
+  video.pause();
 };
 
-const onPlayButtonClick = (video) => {
-  video?.play();
-};
+const onPlayButtonClick = (video) => video.play();
 
 const onFullScreenButtonClick = (elem) => {
   if (!document.fullscreenElement) {
@@ -82,19 +80,19 @@ function Player({filmId}) {
     dispatch(fetchCurrentFilm(filmId));
   }, [filmId, dispatch]);
 
-  const [isFilmPlaying, setIsFilmPlaying] = useState(false);
   const videoRef = useRef(null);
   const playerRef = useRef(null);
   const progressRef = useRef(null);
-  const togglerRef = useRef(null);
+  const progressTogglerRef = useRef(null);
   const controlsRef = useRef(null);
   const exitButtonRef = useRef(null);
+  const [isFilmPlaying, setIsFilmPlaying] = useState(false);
   const [filmDuration, setFilmDuration] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState('00:00');
   const [timeElapsed, setTimeElapsed] = useState('00:00');
   const [controlsTimer, setControlsTimer] = useState(null);
 
-  const handleMouseMove = () => {
+  const onMouseMove = () => {
     if (!controlsRef.current) {
       return;
     }
@@ -122,15 +120,14 @@ function Player({filmId}) {
       return;
     }
 
-    let $video = null;
-
     const onCanplay = () => {
       setFilmDuration(getDuration($video));
-      onPlayButtonClick($video);
-      setIsFilmPlaying(true);
+      onPlayButtonClick($video)
+        .then(() => {setIsFilmPlaying(true);})
+        .catch(() => {setIsFilmPlaying(false);});
     };
 
-    $video = videoRef.current;
+    const $video = videoRef.current;
     $video.addEventListener('canplay', onCanplay);
 
     return () => {
@@ -138,7 +135,7 @@ function Player({filmId}) {
         $video.removeEventListener('canplay', onCanplay);
       }
     };
-  });
+  }, [isDataLoading]);
 
   const progressBarTimerId = useRef(null);
 
@@ -150,13 +147,13 @@ function Player({filmId}) {
       const currentTime = parseFloat(videoRef.current.currentTime).toFixed(2);
       setTimeElapsed(currentTime);
       progressRef.current.value = currentTime;
-      togglerRef.current.style.left =` ${getPercentage(currentTime, filmDuration)}%`;
+      progressTogglerRef.current.style.left =` ${getPercentage(currentTime, filmDuration)}%`;
       setTimeRemaining(formatPlayerTime(filmDuration - parseInt(currentTime, 10), '-'));
     }, PROGRESSBAR_REFRESHING_INTERVAL);
     return () => {
       clearInterval(progressBarTimerId.current);
     };
-  }, [setTimeElapsed, setTimeRemaining, filmDuration]);
+  }, [filmDuration]);
 
   if (isDataLoading) {
     return <PlayerSpinner />;
@@ -174,6 +171,7 @@ function Player({filmId}) {
       className="player__play"
       onClick={(evt) => {
         evt.preventDefault();
+
         onPauseButtonClick(videoRef.current);
         setIsFilmPlaying(false);
       }}
@@ -206,7 +204,7 @@ function Player({filmId}) {
     <div
       ref={playerRef}
       className="player"
-      onMouseMove={handleMouseMove}
+      onMouseMove={onMouseMove}
     >
 
       <video
@@ -221,8 +219,9 @@ function Player({filmId}) {
             onPauseButtonClick(videoRef.current);
             setIsFilmPlaying(false);
           } else {
-            onPlayButtonClick(videoRef.current);
-            setIsFilmPlaying(true);
+            onPlayButtonClick(videoRef.current)
+              .then(() => {setIsFilmPlaying(true);})
+              .catch(() => {setIsFilmPlaying(false);});
           }
         }}
       />
@@ -248,7 +247,7 @@ function Player({filmId}) {
               max={filmDuration}
             />
             <div
-              ref={togglerRef}
+              ref={progressTogglerRef}
               className="player__toggler"
               title={formatPlayerTime(parseInt(timeElapsed, 10))}
             >

@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {AppRoute, AuthorizationStatus} from '../../consts';
 import {useSelector, useDispatch} from 'react-redux';
 import {logout} from '../../store/api-actions';
-import { getAuthorizationStatus } from '../../store/user/selectors';
+import {getAuthorizationStatus} from '../../store/user/selectors';
 
 function UserBlock() {
   const authorizationStatus = useSelector(getAuthorizationStatus);

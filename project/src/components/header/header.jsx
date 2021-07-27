@@ -5,12 +5,11 @@ import {AppRoute} from '../../consts';
 import UserBlock from '../user-block/user-block';
 
 function Header({children}) {
-  // console.log(typeof children);
   return (
 
     <header className="page-header user-page__head">
       <div className="logo">
-        <Link to={AppRoute.MAIN} className="logo__link">
+        <Link to={AppRoute.MAIN} className="logo__link" title='logotype'>
           <span className="logo__letter logo__letter--1">W</span>
           <span className="logo__letter logo__letter--2">T</span>
           <span className="logo__letter logo__letter--3">W</span>
