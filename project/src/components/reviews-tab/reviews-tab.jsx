@@ -4,8 +4,8 @@ import Review from '../review/review';
 import Spinner from '../spinner/spinner';
 import {useSelector, useDispatch} from 'react-redux';
 import {fetchFilmComments} from '../../store/api-actions';
-import { getCurrentFilmComments } from '../../store/film-page/selectors';
-import { isFilmCommentsLoading } from '../../store/loading/selectors';
+import {getCurrentFilmComments} from '../../store/film-page/selectors';
+import {isFilmCommentsLoading} from '../../store/loading/selectors';
 
 function ReviewsTab({filmId}) {
   const comments = useSelector(getCurrentFilmComments);
@@ -17,9 +17,11 @@ function ReviewsTab({filmId}) {
     dispatch(fetchFilmComments(filmId));
   }, [filmId, dispatch]);
 
-  if (isDataLoading) {
-    return <Spinner />;
-  }
+  useEffect(() => {
+    if (isDataLoading) {
+      return <Spinner />;
+    }
+  }, [isDataLoading]);
 
   const $comments = comments.map((review) => (
     <Review

@@ -7,7 +7,7 @@ import {AppRoute} from '../../consts';
 import {useSelector, useDispatch} from 'react-redux';
 import {fetchFavoriteFilms} from '../../store/api-actions';
 import {getFavoriteFilms} from '../../store/favorite-page/selectors';
-import { isFavoriteFilmsLoading } from '../../store/loading/selectors';
+import {isFavoriteFilmsLoading} from '../../store/loading/selectors';
 
 function MyList() {
   const favoriteFilms = useSelector(getFavoriteFilms);

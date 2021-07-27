@@ -1,11 +1,7 @@
 import React from 'react';
 import filmProp from '../film/film.prop';
+import {getFormatedFilmDuration, getFormatedFilmStarring} from '../../utils';
 
-const formatedFilmDuration = (duration) => {
-  const hour = Math.floor(duration / 60);
-  const minute = duration - hour * 60;
-  return `${hour}h ${minute}m`;
-};
 function DetailsTab({film}) {
   const {
     director,
@@ -15,17 +11,8 @@ function DetailsTab({film}) {
     release,
   } = film;
 
-  const filmStarring = starring.map((star, ind) =>{
-    if (ind !== starring.length - 1) {
-      return (
-        <React.Fragment key={star}>
-          {star}, <br />
-        </React.Fragment>);
-    }
-    return star;
-  });
-  const filmDuration = formatedFilmDuration(duration);
-
+  const filmStarring = getFormatedFilmStarring(starring);
+  const filmDuration = getFormatedFilmDuration(duration);
 
   return (
     <div className="film-card__text film-card__row">
@@ -36,7 +23,7 @@ function DetailsTab({film}) {
         </p>
         <p className="film-card__details-item">
           <strong className="film-card__details-name">Starring</strong>
-          <span className="film-card__details-value">
+          <span className="film-card__details-value" data-testid="film-starring">
             {filmStarring}
           </span>
         </p>
@@ -45,7 +32,7 @@ function DetailsTab({film}) {
       <div className="film-card__text-col">
         <p className="film-card__details-item">
           <strong className="film-card__details-name">Run Time</strong>
-          <span className="film-card__details-value">{filmDuration}</span>
+          <span className="film-card__details-value" data-testid="film-duration">{filmDuration}</span>
         </p>
         <p className="film-card__details-item">
           <strong className="film-card__details-name">Genre</strong>

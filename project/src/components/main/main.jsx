@@ -18,8 +18,7 @@ import {
   getFilteredFilms,
   getPromotedFilm as getPromoFilm
 } from '../../store/main-page/selectors';
-import { isMainPageDataLoading } from '../../store/loading/selectors';
-import { getIsAuthorized } from '../../store/user/selectors';
+import {isMainPageDataLoading} from '../../store/loading/selectors';
 
 const BUNCH_FILM_COUNT = 8;
 
@@ -27,7 +26,6 @@ function Main() {
   const filteredFilms = useSelector(getFilteredFilms);
   const promotedFilm = useSelector(getPromoFilm);
   const isDataLoading = useSelector(isMainPageDataLoading);
-  const isAuthorized = useSelector(getIsAuthorized);
 
   const {
     id,
@@ -63,9 +61,11 @@ function Main() {
     }
   }, [filteredFilms, filmsMustBeShownCount]);
 
-  if (isDataLoading) {
-    return <Spinner />;
-  }
+  useEffect(() => {
+    if (isDataLoading) {
+      return <Spinner />;
+    }
+  }, [isDataLoading]);
 
   const onMoreButtonClick = () => {
     setFilmsMustBeShownCount(
@@ -84,7 +84,7 @@ function Main() {
           <img src={backgroundImage} alt="The Grand Budapest Hotel" />
         </div>
 
-        <h1 className="visually-hidden">WTW</h1>
+        <h1 className="visually-hidden" data-testid="heading">WTW</h1>
 
         <Header />
 
@@ -103,10 +103,7 @@ function Main() {
 
               <div className="film-card__buttons">
                 <PlayButton filmId={id} />
-                {isAuthorized
-                  ? <MyListButton isInList={isFavorite} onClick={onMyListButtonClick}/>
-                  : '' }
-
+                <MyListButton isInList={isFavorite} onClick={onMyListButtonClick}/>
               </div>
             </div>
           </div>

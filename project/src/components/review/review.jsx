@@ -1,4 +1,5 @@
 import React from 'react';
+import {getFormatedReviewDate} from '../../utils';
 import reviewProp from './review.prop';
 
 function Review({review}) {
@@ -9,9 +10,7 @@ function Review({review}) {
     rating,
   } = review;
 
-  const reviewDate = new Date(date).toLocaleDateString(
-    'en-US',
-    { month: 'long', day: 'numeric', year: 'numeric'});
+  const reviewDate = getFormatedReviewDate(date);
 
   return (
     <div className="review">
@@ -22,7 +21,7 @@ function Review({review}) {
 
         <footer className="review__details">
           <cite className="review__author">{user.name}</cite>
-          <time className="review__date" dateTime="2016-12-24">
+          <time className="review__date" dateTime={date}>
             {reviewDate}
           </time>
         </footer>
