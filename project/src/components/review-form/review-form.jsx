@@ -6,6 +6,8 @@ import {nullifyNewCommentErrorCode} from '../../store/action';
 import ErrorMessage from '../error-message/error-message';
 import {getNewCommentErrorCode} from '../../store/film-page/selectors';
 
+const MINIMUM_COMMENT_LENGTH = 50;
+const MAXIMUM_COMMENT_LENGTH = 400;
 
 function ReviewForm({filmId}) {
   const errorCode = useSelector(getNewCommentErrorCode);
@@ -29,7 +31,8 @@ function ReviewForm({filmId}) {
   }, [dispatch]);
 
   useEffect(() => {
-    if ((comment.length >= 50) && (comment.length <= 400) && rating) {
+    if ((comment.length >= MINIMUM_COMMENT_LENGTH)
+      && (comment.length <= MAXIMUM_COMMENT_LENGTH) && rating) {
       setIsReadyToSubmit(true);
     } else {
       setIsReadyToSubmit(false);
