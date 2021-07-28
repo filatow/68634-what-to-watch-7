@@ -6,6 +6,8 @@ export const ActionType = {
   LOAD_PROMOTED_FILM: 'main/loadPromotedFilm',
   REQUIRE_AUTHORIZATION: 'user/requireAuthorization',
   LOGOUT: 'user/logout',
+  LOAD_AUTH_INFO: 'user/loadAuthInfo',
+  RESET_AUTH_INFO: 'user/resetAuthInfo',
   LOAD_FAVORITE_FILMS: 'favorite/loadFavoriteFilms',
   LOAD_CURRENT: 'film/loadCurrent',
   LOAD_SIMILAR: 'film/loadSimilar',
@@ -108,6 +110,17 @@ export const requireAuthorization = createAction(
 
 export const logout = createAction(
   ActionType.LOGOUT,
+);
+
+export const loadAuthInfo = createAction(
+  ActionType.LOAD_AUTH_INFO,
+  (authInfo) => ({
+    payload: authInfo,
+  }),
+);
+
+export const resetAuthInfo = createAction(
+  ActionType.RESET_AUTH_INFO,
 );
 
 export const redirectToRoute = createAction(

@@ -11,10 +11,12 @@ import {
   stopLoading,
   logout as userLogout,
   addNewComment,
-  catchNewCommentError
+  catchNewCommentError,
+  loadAuthInfo,
+  resetAuthInfo
 } from './action';
 import {AuthorizationStatus,AppRoute, APIRoute, LoadedData} from '../consts';
-import {adaptFilmToClient} from '../utils';
+import {adaptFilmToClient, adaptAuthInfoToClient} from '../utils';
 
 export const fetchFilmList = () => (dispatch, _getState, api) => {
   dispatch(startLoading(LoadedData.FILMS));
@@ -71,12 +73,19 @@ export const fetchFilmComments = (filmId) => (dispatch, _getState, api) => {
 
 export const checkAuth = () => (dispatch, _getState, api) =>
   api.get(APIRoute.LOGIN)
+    .then(({data}) => {
+      dispatch(loadAuthInfo(adaptAuthInfoToClient(data)));
+      localStorage.setItem('token', data.token);
+    })
     .then(() => dispatch(requireAuthorization(AuthorizationStatus.AUTH)))
     .catch(() => {});
 
 export const login = ({login: email, password}) => (dispatch, _getState, api) =>
   api.post(APIRoute.LOGIN, {email, password})
-    .then(({data}) => localStorage.setItem('token', data.token))
+    .then(({data}) => {
+      dispatch(loadAuthInfo(adaptAuthInfoToClient(data)));
+      localStorage.setItem('token', data.token);
+    })
     .then(() => api.defaults.headers['x-token'] = localStorage.getItem('token'))
     .then(() => dispatch(requireAuthorization(AuthorizationStatus.AUTH)))
     .then(() => dispatch(redirectToRoute(AppRoute.MAIN)));
@@ -84,6 +93,7 @@ export const login = ({login: email, password}) => (dispatch, _getState, api) =>
 export const logout = () => (dispatch, _getState, api) =>
   api.delete(APIRoute.LOGOUT)
     .then(() => localStorage.removeItem('token'))
+    .then(() => dispatch(resetAuthInfo()))
     .then(() => dispatch(userLogout()));
 
 export const postComment = (filmId, newComment) => (dispatch, _getState, api) =>

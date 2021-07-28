@@ -31,6 +31,21 @@ export const adaptFilmToClient = (film) => {
   return adaptedFilm;
 };
 
+export const adaptAuthInfoToClient = (authInfo) => {
+  const adaptedAuthInfo = Object.assign(
+    {},
+    {
+      id: authInfo.id,
+      email: authInfo.email,
+      name: authInfo.name,
+      avatarUrl: authInfo.avatar_url,
+      token: authInfo.token,
+    },
+  );
+
+  return adaptedAuthInfo;
+};
+
 export const getLoadingObject = (
   source = {},
   defaultValue = false,

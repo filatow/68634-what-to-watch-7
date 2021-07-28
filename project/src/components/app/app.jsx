@@ -12,6 +12,7 @@ import Spinner from '../spinner/spinner';
 import {AppRoute} from '../../consts';
 import {isAuthChecking} from '../../utils';
 import PrivateRoute from '../private-route/private-route';
+import GuestOnlyRoute from '../guest-only-route/guest-only-route';
 import {getAuthorizationStatus} from '../../store/user/selectors';
 
 
@@ -35,15 +36,14 @@ function App() {
         }
       >
       </Route>
-      <Route
+      <GuestOnlyRoute
         path={AppRoute.LOGIN}
         exact
         render={
-          () => (
-            <SignIn />
-          )
+          () => <SignIn />
         }
-      />
+      >
+      </GuestOnlyRoute>
       <PrivateRoute
         path={AppRoute.MYLIST}
         exact

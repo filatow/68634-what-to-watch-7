@@ -8,6 +8,7 @@ import {getNewCommentErrorCode} from '../../store/film-page/selectors';
 
 const MINIMUM_COMMENT_LENGTH = 50;
 const MAXIMUM_COMMENT_LENGTH = 400;
+const RATING_STARS_COUNT = 10;
 
 function ReviewForm({filmId}) {
   const errorCode = useSelector(getNewCommentErrorCode);
@@ -50,6 +51,27 @@ function ReviewForm({filmId}) {
     dispatch(postComment(filmId, {rating, comment}));
   }
 
+  const $ratingStars = new Array(RATING_STARS_COUNT).fill('raiting_star').map((_star, index) => {
+    const starRating = String(RATING_STARS_COUNT - index);
+    return (
+      <React.Fragment key={`star-${starRating}`}>
+        <input
+          className="rating__input"
+          id={`star-${starRating}`}
+          type="radio"
+          name="rating"
+          value={starRating}
+          onChange={handleRatingInputClick}
+          checked={rating === starRating}
+        />
+        <label
+          className="rating__label"
+          htmlFor={`star-${starRating}`}
+        >
+          {`Rating ${starRating}`}
+        </label>
+      </React.Fragment>
+    );});
 
   return (
     <form
@@ -59,35 +81,7 @@ function ReviewForm({filmId}) {
     >
       <div className="rating">
         <div className="rating__stars">
-          <input className="rating__input" id="star-10" type="radio" name="rating" value="10" onChange={handleRatingInputClick} checked={rating === '10'} />
-          <label className="rating__label" htmlFor="star-10">Rating 10</label>
-
-          <input className="rating__input" id="star-9" type="radio" name="rating" value="9" onChange={handleRatingInputClick} checked={rating === '9'} />
-          <label className="rating__label" htmlFor="star-9">Rating 9</label>
-
-          <input className="rating__input" id="star-8" type="radio" name="rating" value="8" onChange={handleRatingInputClick} checked={rating === '8'} />
-          <label className="rating__label" htmlFor="star-8">Rating 8</label>
-
-          <input className="rating__input" id="star-7" type="radio" name="rating" value="7" onChange={handleRatingInputClick} checked={rating === '7'} />
-          <label className="rating__label" htmlFor="star-7">Rating 7</label>
-
-          <input className="rating__input" id="star-6" type="radio" name="rating" value="6" onChange={handleRatingInputClick} checked={rating === '6'} />
-          <label className="rating__label" htmlFor="star-6">Rating 6</label>
-
-          <input className="rating__input" id="star-5" type="radio" name="rating" value="5" onChange={handleRatingInputClick} checked={rating === '5'} />
-          <label className="rating__label" htmlFor="star-5">Rating 5</label>
-
-          <input className="rating__input" id="star-4" type="radio" name="rating" value="4" onChange={handleRatingInputClick} checked={rating === '4'} />
-          <label className="rating__label" htmlFor="star-4">Rating 4</label>
-
-          <input className="rating__input" id="star-3" type="radio" name="rating" value="3" onChange={handleRatingInputClick} checked={rating === '3'} />
-          <label className="rating__label" htmlFor="star-3">Rating 3</label>
-
-          <input className="rating__input" id="star-2" type="radio" name="rating" value="2" onChange={handleRatingInputClick} checked={rating === '2'} />
-          <label className="rating__label" htmlFor="star-2">Rating 2</label>
-
-          <input className="rating__input" id="star-1" type="radio" name="rating" value="1" onChange={handleRatingInputClick} checked={rating === '1'} />
-          <label className="rating__label" htmlFor="star-1">Rating 1</label>
+          {$ratingStars}
         </div>
       </div>
 
