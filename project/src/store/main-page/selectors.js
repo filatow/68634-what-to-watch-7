@@ -1,14 +1,21 @@
 import {NameSpace} from '../root-reducer';
 import {FilmCategory} from '../../consts';
+import {createSelector} from 'reselect';
 
 export const getFilms = (state) => state[NameSpace.MAIN].films;
 export const getFilterCategory = (state) => state[NameSpace.MAIN].filterCategory;
-export const getFilteredFilms = (state) => {
-  if (state[NameSpace.MAIN].filterCategory === FilmCategory.ALL_GENRES) {
-    return state[NameSpace.MAIN].films;
-  }
-  return state[NameSpace.MAIN].films.filter(
-    (film) => film.genre === state[NameSpace.MAIN].filterCategory);
-};
-
 export const getPromotedFilm = (state) => state[NameSpace.MAIN].promotedFilm;
+export const getAllCategories = createSelector(
+  [getFilms],
+  (films) => [FilmCategory.ALL_GENRES, ...new Set(films.map((film) => film.genre))],
+);
+export const getFilteredFilms = createSelector(
+  [getFilms, getFilterCategory],
+  (films, category) => {
+    if (category === FilmCategory.ALL_GENRES) {
+      return films;
+    }
+    return films.filter(
+      (film) => film.genre === category);
+  },
+);
