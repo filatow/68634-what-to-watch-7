@@ -3,7 +3,6 @@ import filmProp from '../film/film.prop';
 import OverviewTab from './../overview-tab/overview-tab';
 import DetailsTab from './../details-tab/details-tab';
 import ReviewsTab from './../reviews-tab/reviews-tab';
-import reviews from '../../mocks/reviews';
 
 const TAB_NAMES = ['Overview', 'Details', 'Reviews'];
 
@@ -40,7 +39,7 @@ function FilmTabs({film}) {
       </nav>
       {activeTab === TAB_NAMES[0] && <OverviewTab film={film} />}
       {activeTab === TAB_NAMES[1] && <DetailsTab film={film} />}
-      {activeTab === TAB_NAMES[2] && <ReviewsTab filmId={film.id} comments={reviews} />}
+      {activeTab === TAB_NAMES[2] && <ReviewsTab filmId={film.id} />}
     </>
   );
 }
