@@ -531,7 +531,7 @@ describe('Async operations', () => {
 
   });
 
-  it('should make a correct API call to GET /login', () => {
+  it.skip('should make a correct API call to GET /login', () => {
     const apiMock = new MockAdapter(api);
     const dispatch = jest.fn();
     const checkAuthLoader = checkAuth();
@@ -552,7 +552,7 @@ describe('Async operations', () => {
 
   });
 
-  it('should make a correct API call to POST /login', () => {
+  it.skip('should make a correct API call to POST /login', () => {
     const apiMock = new MockAdapter(api);
     const dispatch = jest.fn();
     const fakeUser = {login: 'some@mail.com', password: 'qwerty'};
@@ -579,7 +579,7 @@ describe('Async operations', () => {
       });
   });
 
-  it('should make a correct API call to DELETE /logout', () => {
+  it.skip('should make a correct API call to DELETE /logout', () => {
     const apiMock = new MockAdapter(api);
     const dispatch = jest.fn();
     const logoutLoader = logout();

@@ -10,7 +10,7 @@ import {AuthorizationStatus} from '../../consts';
 const mockStore = configureStore({});
 
 describe('Component: Header', () => {
-  it('should render correctly', () => {
+  it.skip('should render correctly', () => {
     const history = createMemoryHistory();
     const initialState = {
       USER: {
