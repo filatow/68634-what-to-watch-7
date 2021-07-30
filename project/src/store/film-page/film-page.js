@@ -1,6 +1,8 @@
 import {
   addNewComment,
+  catchFilmCommentsError,
   catchNewCommentError,
+  catchSimilarFilmsError,
   loadCurrentFilm,
   loadFilmComments,
   loadSimilarFilms,
@@ -11,7 +13,9 @@ import {createReducer} from '@reduxjs/toolkit';
 const initialState = {
   currentFilm: {},
   similarFilms: [],
+  similarFilmsErrorCode: null,
   currentFilmComments: [],
+  filmCommentsErrorCode: null,
   newCommentErrorCode: null,
 };
 
@@ -23,8 +27,14 @@ const filmPage = createReducer(initialState, (builder) => {
     .addCase(loadSimilarFilms, (state, action) => {
       state.similarFilms = action.payload;
     })
+    .addCase(catchSimilarFilmsError, (state, action) => {
+      state.similarFilmsErrorCode = action.payload;
+    })
     .addCase(loadFilmComments, (state, action) => {
       state.currentFilmComments = action.payload;
+    })
+    .addCase(catchFilmCommentsError, (state, action) => {
+      state.filmCommentsErrorCode = action.payload;
     })
     .addCase(addNewComment, (state, action) => {
       state.currentFilmComments = action.payload;

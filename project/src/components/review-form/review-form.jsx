@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import {useSelector, useDispatch} from 'react-redux';
 import {postComment} from '../../store/api-actions';
@@ -17,6 +17,7 @@ function ReviewForm({filmId}) {
 
   const [rating, setRating] = useState('');
   const [comment, setComment] = useState('');
+  const [isFormAvailable, setIsFormAvailable] = useState(true);
   const [isReadyToSubmit, setIsReadyToSubmit] = useState(false);
 
   function handleRatingInputClick(evt) {
@@ -27,18 +28,28 @@ function ReviewForm({filmId}) {
     setComment(evt.target.value);
   }
 
-  useEffect(() => {
-    dispatch(nullifyNewCommentErrorCode());
-  }, [dispatch]);
+  const updateIsReadyToSubmit = useCallback(
+    () => {
+      if ((comment.length >= MINIMUM_COMMENT_LENGTH)
+        && (comment.length <= MAXIMUM_COMMENT_LENGTH) && rating) {
+        setIsReadyToSubmit(true);
+      } else {
+        setIsReadyToSubmit(false);
+      }
+    },
+    [comment, rating],
+  );
 
   useEffect(() => {
-    if ((comment.length >= MINIMUM_COMMENT_LENGTH)
-      && (comment.length <= MAXIMUM_COMMENT_LENGTH) && rating) {
-      setIsReadyToSubmit(true);
-    } else {
-      setIsReadyToSubmit(false);
+    if (errorCode) {
+      setIsFormAvailable(true);
+      updateIsReadyToSubmit();
     }
-  }, [comment, rating]);
+  }, [updateIsReadyToSubmit, errorCode]);
+
+  useEffect(() => {
+    updateIsReadyToSubmit();
+  }, [updateIsReadyToSubmit]);
 
   function handleFormSubmit(evt) {
     evt.preventDefault();
@@ -47,6 +58,8 @@ function ReviewForm({filmId}) {
       return;
     }
 
+    dispatch(nullifyNewCommentErrorCode());
+    setIsFormAvailable(false);
     setIsReadyToSubmit(false);
     dispatch(postComment(filmId, {rating, comment}));
   }
@@ -63,6 +76,7 @@ function ReviewForm({filmId}) {
           value={starRating}
           onChange={handleRatingInputClick}
           checked={rating === starRating}
+          disabled={!isFormAvailable}
         />
         <label
           className="rating__label"
@@ -93,6 +107,7 @@ function ReviewForm({filmId}) {
           placeholder="Review text"
           onChange={handleTextareaChange}
           value={comment}
+          disabled={!isFormAvailable}
         />
         <div className="add-review__submit">
           <button

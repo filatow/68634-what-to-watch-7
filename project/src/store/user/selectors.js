@@ -6,3 +6,4 @@ export const getAuthorizationStatus = (state) => state[NameSpace.USER].authoriza
 export const getIsAuthorized = (state) =>
   state[NameSpace.USER].authorizationStatus === AuthorizationStatus.AUTH;
 export const getUserAuthInfo = (state) => state[NameSpace.USER].authInfo;
+export const getAuthorizationErrorCode = (state) => state[NameSpace.USER].authorizationErrorCode;

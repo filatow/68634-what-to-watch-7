@@ -11,30 +11,26 @@ import {
   fetchPromotedFilm,
   setPromotedFilmFavoriteStatus
 } from '../../store/api-actions';
-import Header from '../header/header';
-import MyListButton from '../my-list-button/my-list-button';
-import PlayButton from '../play-button/play-button';
 import {
+  getFilmsErrorCode,
   getFilteredFilms,
   getPromotedFilm as getPromoFilm
 } from '../../store/main-page/selectors';
-import {isMainPageDataLoading} from '../../store/loading/selectors';
+import {isFilmsLoading} from '../../store/loading/selectors';
+import PromotedFilmCard from '../promoted-film-card/promoted-film-card';
+import FilmListErrorCase from '../film-list-error-case/film-list-error-case';
 
 const BUNCH_FILM_COUNT = 8;
 
 function Main() {
   const filteredFilms = useSelector(getFilteredFilms);
   const promotedFilm = useSelector(getPromoFilm);
-  const isDataLoading = useSelector(isMainPageDataLoading);
+  const filmsErrorCode = useSelector(getFilmsErrorCode);
+  const isDataLoading = useSelector(isFilmsLoading);
 
   const {
     id,
     isFavorite,
-    title,
-    genre,
-    release,
-    backgroundImage,
-    poster,
   } = promotedFilm;
 
   const dispatch = useDispatch();
@@ -79,43 +75,16 @@ function Main() {
 
   return (
     <React.Fragment>
-      <section className="film-card">
-        <div className="film-card__bg">
-          <img src={backgroundImage} alt="The Grand Budapest Hotel" />
-        </div>
-
-        <h1 className="visually-hidden" data-testid="heading">WTW</h1>
-
-        <Header />
-
-        <div className="film-card__wrap">
-          <div className="film-card__info">
-            <div className="film-card__poster">
-              <img src={poster} alt={title} width="218" height="327" />
-            </div>
-
-            <div className="film-card__desc">
-              <h2 className="film-card__title">{title}</h2>
-              <p className="film-card__meta">
-                <span className="film-card__genre">{genre}</span>
-                <span className="film-card__year">{release}</span>
-              </p>
-
-              <div className="film-card__buttons">
-                <PlayButton filmId={id} />
-                <MyListButton isInList={isFavorite} onClick={onMyListButtonClick}/>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PromotedFilmCard onMyListButtonClick={onMyListButtonClick} />
       <div className="page-content">
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
 
           <GenreList />
 
-          <FilmList films={filmsMustBeShown} />
+          {filmsErrorCode ? <FilmListErrorCase errorCode={filmsErrorCode} />
+            : <FilmList films={filmsMustBeShown} isLoading={isDataLoading} />}
+
 
           {isMoreButtonVisible ? <MoreButton onClick={onMoreButtonClick} /> : ''}
 

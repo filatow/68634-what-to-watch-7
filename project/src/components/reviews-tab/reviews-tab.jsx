@@ -1,27 +1,32 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Review from '../review/review';
 import Spinner from '../spinner/spinner';
-import {useSelector, useDispatch} from 'react-redux';
-import {fetchFilmComments} from '../../store/api-actions';
-import {getCurrentFilmComments} from '../../store/film-page/selectors';
+import {useSelector} from 'react-redux';
 import {isFilmCommentsLoading} from '../../store/loading/selectors';
+import reviewProp from '../review/review.prop';
+import {getFilmCommentsErrorCode} from '../../store/film-page/selectors';
+import ErrorMessage from '../error-message/error-message';
+import './reviews-tab.css';
 
-function ReviewsTab({filmId}) {
-  const comments = useSelector(getCurrentFilmComments);
+function getErrorCaseMarkup(errorCode) {
+  return (
+    <h3 className="film-card__reviews-error">
+      <div className="film-card__reviews-error-heading">
+        Reviews cannot be presented now. <br />
+        Something went wrong...
+      </div>
+      <ErrorMessage errorCode={errorCode} />
+    </h3>);
+}
+
+function ReviewsTab({comments}) {
   const isDataLoading = useSelector(isFilmCommentsLoading);
+  const errorCode = useSelector(getFilmCommentsErrorCode);
 
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchFilmComments(filmId));
-  }, [filmId, dispatch]);
-
-  useEffect(() => {
-    if (isDataLoading) {
-      return <Spinner />;
-    }
-  }, [isDataLoading]);
+  if (isDataLoading) {
+    return <Spinner />;
+  }
 
   const $comments = comments.map((review) => (
     <Review
@@ -29,6 +34,10 @@ function ReviewsTab({filmId}) {
       key={String(review.user.id) + review.date}
     />),
   );
+
+  if (errorCode) {
+    return getErrorCaseMarkup(errorCode);
+  }
 
   return (
     <div className="film-card__reviews film-card__row">
@@ -43,7 +52,7 @@ function ReviewsTab({filmId}) {
 }
 
 ReviewsTab.propTypes = {
-  filmId: PropTypes.number.isRequired,
+  comments: PropTypes.arrayOf(reviewProp).isRequired,
 };
 
 export default ReviewsTab;

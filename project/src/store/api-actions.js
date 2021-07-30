@@ -13,7 +13,13 @@ import {
   addNewComment,
   catchNewCommentError,
   loadAuthInfo,
-  resetAuthInfo
+  resetAuthInfo,
+  catchAuthorizationError,
+  catchPromotedFilmError,
+  catchFilmCommentsError,
+  catchFilmListError,
+  catchSimilarFilmsError,
+  catchFavoriteFilmsError
 } from './action';
 import {AuthorizationStatus,AppRoute, APIRoute, LoadedData} from '../consts';
 import {adaptFilmToClient, adaptAuthInfoToClient} from '../utils';
@@ -24,7 +30,7 @@ export const fetchFilmList = () => (dispatch, _getState, api) => {
     .then(({data}) => dispatch(loadFilms(
       data.map((film) => adaptFilmToClient(film)),
     )))
-    .catch(() => {})
+    .catch(({response}) => dispatch(catchFilmListError(response.status)))
     .finally(() => dispatch(stopLoading(LoadedData.FILMS)));
 };
 
@@ -32,7 +38,7 @@ export const fetchPromotedFilm = () => (dispatch, _getState, api) => {
   dispatch(startLoading(LoadedData.PROMOTED_FILM));
   return api.get(APIRoute.PROMO)
     .then(({data}) => dispatch(loadPromotedFilm(adaptFilmToClient(data))))
-    .catch(() => {})
+    .catch(({response}) => dispatch(catchPromotedFilmError(response.status)))
     .finally(() => dispatch(stopLoading(LoadedData.PROMOTED_FILM)));
 };
 
@@ -50,7 +56,7 @@ export const fetchSimilarFilms = (filmId) => (dispatch, _getState, api) => {
     .then(({data}) => dispatch(loadSimilarFilms(
       data.map((film) => adaptFilmToClient(film)),
     )))
-    .catch(() => {})
+    .catch(({response}) => dispatch(catchSimilarFilmsError(response.status)))
     .finally(() => dispatch(stopLoading(LoadedData.SIMILAR_FILMS)));
 };
 
@@ -60,7 +66,7 @@ export const fetchFavoriteFilms = () => (dispatch, _getState, api) => {
     .then(({data}) => dispatch(loadFavoriteFilms(
       data.map((film) => adaptFilmToClient(film)),
     )))
-    .catch(() => {})
+    .catch(({response}) => dispatch(catchFavoriteFilmsError(response.status)))
     .finally(() => dispatch(stopLoading(LoadedData.FAVORITE_FILMS)));
 };
 
@@ -68,6 +74,7 @@ export const fetchFilmComments = (filmId) => (dispatch, _getState, api) => {
   dispatch(startLoading(LoadedData.FILM_COMMENTS));
   return api.get(`${APIRoute.COMMENTS}/${filmId}`)
     .then(({data}) => dispatch(loadFilmComments(data)))
+    .catch(({response}) => dispatch(catchFilmCommentsError(response.status)))
     .finally(() => dispatch(stopLoading(LoadedData.FILM_COMMENTS)));
 };
 
@@ -88,7 +95,8 @@ export const login = ({login: email, password}) => (dispatch, _getState, api) =>
     })
     .then(() => api.defaults.headers['x-token'] = localStorage.getItem('token'))
     .then(() => dispatch(requireAuthorization(AuthorizationStatus.AUTH)))
-    .then(() => dispatch(redirectToRoute(AppRoute.MAIN)));
+    .then(() => dispatch(redirectToRoute(AppRoute.MAIN)))
+    .catch(({response}) => dispatch(catchAuthorizationError(response.status)));
 
 export const logout = () => (dispatch, _getState, api) =>
   api.delete(APIRoute.LOGOUT)

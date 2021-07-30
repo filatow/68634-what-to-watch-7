@@ -16,13 +16,18 @@ import Header from '../header/header';
 import MyListButton from '../my-list-button/my-list-button';
 import ReviewButton from '../review-button/review-button';
 import PlayButton from '../play-button/play-button';
-import {getCurrentFilm, getSimilarFilms} from '../../store/film-page/selectors';
+import {
+  getCurrentFilm,
+  getSimilarFilms,
+  getSimilarFilmsErrorCode
+} from '../../store/film-page/selectors';
 import {isFilmPageDataLoading} from '../../store/loading/selectors';
+import FilmListErrorCase from '../film-list-error-case/film-list-error-case';
 
 function Film({filmId}) {
-
   const film = useSelector(getCurrentFilm);
   const similarFilms = useSelector(getSimilarFilms).filter((sim) => sim.id !== film.id);
+  const similarFilmsErrorCode = useSelector(getSimilarFilmsErrorCode);
   const isDataLoading = useSelector(isFilmPageDataLoading);
 
   const dispatch = useDispatch();
@@ -102,10 +107,9 @@ function Film({filmId}) {
         <section className="catalog catalog--like-this">
           <h2 className="catalog__title">More like this</h2>
 
-          <FilmList
-            films={similarFilms}
-          >
-          </FilmList>
+          {similarFilmsErrorCode ? <FilmListErrorCase errorCode={similarFilmsErrorCode} />
+            :<FilmList films={similarFilms} isLoading={isDataLoading} />}
+
         </section>
 
         <footer className="page-footer">

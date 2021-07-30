@@ -1,10 +1,18 @@
-import {loadAuthInfo, logout, requireAuthorization, resetAuthInfo} from '../action';
+import {
+  catchAuthorizationError,
+  loadAuthInfo,
+  logout,
+  nullifyAuthorizationErrorCode,
+  requireAuthorization,
+  resetAuthInfo
+} from '../action';
 import { AuthorizationStatus } from '../../consts';
 import {createReducer} from '@reduxjs/toolkit';
 
 const initialState = {
   authorizationStatus: AuthorizationStatus.UNKNOWN,
   authInfo: {},
+  authorizationErrorCode: null,
 };
 
 const user = createReducer(initialState, (builder) => {
@@ -20,6 +28,12 @@ const user = createReducer(initialState, (builder) => {
     })
     .addCase(resetAuthInfo, (state) => {
       state.authInfo = {};
+    })
+    .addCase(catchAuthorizationError, (state, action) => {
+      state.authorizationErrorCode = action.payload;
+    })
+    .addCase(nullifyAuthorizationErrorCode, (state) => {
+      state.authorizationErrorCode = null;
     });
 });
 

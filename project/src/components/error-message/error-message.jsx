@@ -9,8 +9,10 @@ function errorMessageText(errorCode) {
       return 'Bad request to server';
     case HttpCode.UNAUTHORIZED:
       return 'Authorization is required';
+    case HttpCode.NOT_FOUND:
+      return 'Resource is not found';
     default:
-      return 'Unknown error';
+      return `Unknown error (${errorCode})`;
   }
 }
 

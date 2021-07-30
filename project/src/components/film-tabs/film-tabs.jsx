@@ -1,12 +1,23 @@
 import React, {useState, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import filmProp from '../film/film.prop';
 import OverviewTab from './../overview-tab/overview-tab';
 import DetailsTab from './../details-tab/details-tab';
 import ReviewsTab from './../reviews-tab/reviews-tab';
+import {fetchFilmComments} from '../../store/api-actions';
+import {getCurrentFilmComments} from '../../store/film-page/selectors';
 
 const TAB_NAMES = ['Overview', 'Details', 'Reviews'];
 
 function FilmTabs({film}) {
+  const comments = useSelector(getCurrentFilmComments);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchFilmComments(film.id));
+  }, [film, dispatch]);
+
   const [activeTab, setActiveTab] = useState(TAB_NAMES[0]);
   const $tabs = TAB_NAMES.map((tabName) => (
     <li
@@ -39,7 +50,7 @@ function FilmTabs({film}) {
       </nav>
       {activeTab === TAB_NAMES[0] && <OverviewTab film={film} />}
       {activeTab === TAB_NAMES[1] && <DetailsTab film={film} />}
-      {activeTab === TAB_NAMES[2] && <ReviewsTab filmId={film.id} />}
+      {activeTab === TAB_NAMES[2] && <ReviewsTab comments={comments} />}
     </>
   );
 }

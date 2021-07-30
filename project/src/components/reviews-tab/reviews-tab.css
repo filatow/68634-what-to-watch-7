@@ -1,0 +1,9 @@
+.film-card__reviews-error {
+  font-size: 19px;
+  line-height: 30px;
+  color: #252525;
+}
+
+.film-card__reviews-error-heading {
+  font-weight: bold;
+}
