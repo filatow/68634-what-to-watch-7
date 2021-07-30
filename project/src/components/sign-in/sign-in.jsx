@@ -6,6 +6,7 @@ import {login} from '../../store/api-actions';
 import ErrorMessage from '../error-message/error-message';
 import {getAuthorizationErrorCode} from '../../store/user/selectors';
 import {nullifyAuthorizationErrorCode} from '../../store/action';
+import Footer from '../footer/footer';
 
 
 const CORRECT_EMAIL_REGEXP =
@@ -142,19 +143,7 @@ function SignIn() {
         </form>
       </div>
 
-      <footer className="page-footer">
-        <div className="logo">
-          <Link to={AppRoute.MAIN} className="logo__link logo__link--light">
-            <span className="logo__letter logo__letter--1">W</span>
-            <span className="logo__letter logo__letter--2">T</span>
-            <span className="logo__letter logo__letter--3">W</span>
-          </Link>
-        </div>
-
-        <div className="copyright">
-          <p>© 2019 What to watch Ltd.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

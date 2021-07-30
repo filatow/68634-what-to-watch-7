@@ -2,8 +2,6 @@ import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import FilmList from '../film-list/film-list';
 import FilmTabs from '../film-tabs/film-tabs';
-import {Link} from 'react-router-dom';
-import {AppRoute} from '../../consts';
 import Spinner from '../spinner/spinner';
 import Page404 from '../page-404/page-404';
 import {useSelector, useDispatch} from 'react-redux';
@@ -23,6 +21,7 @@ import {
 } from '../../store/film-page/selectors';
 import {isFilmPageDataLoading} from '../../store/loading/selectors';
 import FilmListErrorCase from '../film-list-error-case/film-list-error-case';
+import Footer from '../footer/footer';
 
 function Film({filmId}) {
   const film = useSelector(getCurrentFilm);
@@ -112,19 +111,7 @@ function Film({filmId}) {
 
         </section>
 
-        <footer className="page-footer">
-          <div className="logo">
-            <Link to={AppRoute.MAIN} className="logo__link logo__link--light">
-              <span className="logo__letter logo__letter--1">W</span>
-              <span className="logo__letter logo__letter--2">T</span>
-              <span className="logo__letter logo__letter--3">W</span>
-            </Link>
-          </div>
-
-          <div className="copyright">
-            <p>© 2019 What to watch Ltd.</p>
-          </div>
-        </footer>
+        <Footer />
       </div>
 
     </React.Fragment>
